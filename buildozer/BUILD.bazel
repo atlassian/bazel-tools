@@ -1,0 +1,4 @@
+exports_files(
+    ["runner.bash.template"],
+    visibility = ["//visibility:public"],
+)
