@@ -1,0 +1,8 @@
+#!/bin/bash
+
+GOIMPORTS_SHORT_PATH=@@GOIMPORTS_SHORT_PATH@@
+ARGS=@@ARGS@@
+
+goimports_short_path=$(readlink "$GOIMPORTS_SHORT_PATH")
+cd "$BUILD_WORKSPACE_DIRECTORY"
+"$goimports_short_path" "${ARGS[@]}" $(find . -type f -name '*.go' @@EXCLUDE_PATHS@@ @@EXCLUDE_FILES@@)
