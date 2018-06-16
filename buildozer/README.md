@@ -4,7 +4,7 @@ See the [official readme](https://github.com/bazelbuild/buildtools/tree/master/b
 
 ## Setup and usage via Bazel
 
-You can also invoke buildozer via the Bazel rule.
+You can invoke buildozer via the Bazel rule.
 
 `WORKSPACE` file:
 ```bzl
@@ -45,5 +45,5 @@ buildozer(
 ```
 Invoke with
 ```bash
-bazel run --direct_run //:buildozer
+bazel run //:buildozer
 ```
