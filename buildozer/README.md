@@ -21,7 +21,7 @@ http_archive(
 http_archive(
     name = "com_github_atlassian_bazel_tools",
     strip_prefix = "bazel-tools-<commit hash>",
-    url = "https://github.com/atlassian/bazel-tools/archive/<commit hash>.zip",
+    urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.zip"],
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_register_toolchains", "go_rules_dependencies")
