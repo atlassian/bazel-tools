@@ -1,4 +1,4 @@
-load("@bazel_skylib//:lib.bzl", "shell")
+load("@bazel_skylib//:lib.bzl", "paths", "shell")
 
 def _goimports_impl(ctx):
     # That way we don't depend on defaults encoded in the binary but always
@@ -24,6 +24,8 @@ def _goimports_impl(ctx):
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     substitutions = {
+        "@@PREFIX_DIR_PATH@@": shell.quote(paths.dirname(ctx.attr.prefix)),
+        "@@PREFIX_BASE_NAME@@": shell.quote(paths.basename(ctx.attr.prefix)),
         "@@ARGS@@": shell.array_literal(args),
         "@@GOIMPORTS_SHORT_PATH@@": shell.quote(ctx.executable._goimports.short_path),
         "@@EXCLUDE_PATHS@@": exclude_paths_str,
@@ -45,6 +47,10 @@ def _goimports_impl(ctx):
 goimports = rule(
     implementation = _goimports_impl,
     attrs = {
+        "prefix": attr.string(
+            mandatory = True,
+            doc = "Go import path of this project i.e. where in GOPATH you would put it. E.g. github.com/atlassian/bazel-tools",
+        ),
         "exclude_paths": attr.string_list(
             allow_empty = True,
             default = ["./vendor/*"],
