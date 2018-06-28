@@ -14,9 +14,9 @@ def _buildozer_impl(ctx):
         "-delete_with_comments=%s" % str(ctx.attr.delete_with_comments).lower(),
     ]
     if ctx.file.tables:
-        args.extend(["-tables=%s" % ctx.file.tables.short_path])
+        args.append("-tables=%s" % ctx.file.tables.short_path)
     if ctx.file.add_tables:
-        args.extend(["-add_tables=%s" % ctx.file.add_tables.short_path])
+        args.append("-add_tables=%s" % ctx.file.add_tables.short_path)
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     substitutions = {
