@@ -44,7 +44,7 @@ def _goimports_impl(ctx):
         executable = out_file,
     )]
 
-goimports = rule(
+_goimports = rule(
     implementation = _goimports_impl,
     attrs = {
         "prefix": attr.string(
@@ -91,3 +91,13 @@ goimports = rule(
     },
     executable = True,
 )
+
+def goimports(name, **kwargs):
+    tags = kwargs.get("tags", [])
+    if "manual" not in tags:
+        tags.append("manual")
+        kwargs["tags"] = tags
+    _goimports(
+        name = name,
+        **kwargs
+    )

@@ -36,7 +36,7 @@ def _buildozer_impl(ctx):
         executable = out_file,
     )]
 
-buildozer = rule(
+_buildozer = rule(
     implementation = _buildozer_impl,
     attrs = {
         "commands": attr.label(
@@ -89,3 +89,13 @@ buildozer = rule(
     },
     executable = True,
 )
+
+def buildozer(name, **kwargs):
+    tags = kwargs.get("tags", [])
+    if "manual" not in tags:
+        tags.append("manual")
+        kwargs["tags"] = tags
+    _buildozer(
+        name = name,
+        **kwargs
+    )
