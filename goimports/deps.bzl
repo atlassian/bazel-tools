@@ -6,9 +6,9 @@ def goimports_dependencies():
         go_repository,
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sha256 = "f2df5546c28299c2dd6e980cd3ff9ae6b7e02086e2839550c4cb78444aeccfdb",
-        strip_prefix = "tools-059bec968c61383b574810040ba9410712de36c5",
-        urls = ["https://github.com/golang/tools/archive/059bec968c61383b574810040ba9410712de36c5"],
+        sha256 = "be8b82a14c21ee83b4ffafa95865195205d449537518b4dff0261def90c35a1c",
+        strip_prefix = "tools-1c99e1239a0c8b0e59c34000995c4e319b7702ca",
+        urls = ["https://github.com/golang/tools/archive/1c99e1239a0c8b0e59c34000995c4e319b7702ca"],
         type = "tar.gz",
     )
 
