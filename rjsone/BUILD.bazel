@@ -1,0 +1,5 @@
+sh_binary(
+    name = "runner",
+    srcs = ["runner.sh"],
+    visibility = ["//visibility:public"],
+)
