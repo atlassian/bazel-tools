@@ -17,9 +17,23 @@ def _keyed_yaml_values_to_args(keyed_yaml_values):
         for key, value in keyed_yaml_values.items()
     ]
 
+def _keyed_contexts_to_args(keyed_contexts):
+    args = []
+    for context_target, context_key in keyed_contexts.items():
+        files = context_target.files.to_list()
+        if len(files) == 0:
+            fail("Target %s produces no files" % context_target.label, attr = "keyed_contexts")
+        elif len(files) == 1:
+            args.append("%s:%s" % (context_key, files[0].path))
+        else:
+            args.append("%s:.." % context_key)
+            args.extend([f.path for f in files])
+
+    return args
+
 def _rjsone_impl(ctx):
     common_args = ctx.actions.args()
-    common_args.add([
+    common_args.add_all([
         "-i",
         str(ctx.attr.indentation),
         "-t",
@@ -28,24 +42,14 @@ def _rjsone_impl(ctx):
         "-v=" + str(ctx.attr.verbose).lower(),
     ])
     common_args.add_all(ctx.files.contexts)
-
-    inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_contexts
-    for context_target, context_key in ctx.attr.keyed_contexts.items():
-        files = context_target.files.to_list()
-        if len(files) == 0:
-            fail("Target %s produces no files" % context_target.label)
-        elif len(files) == 1:
-            new_args = ["%s:%s" % (context_key, files[0].path)]
-        else:
-            new_args = ["%s:.." % context_key] + [f.path for f in files]
-
-        common_args.add(new_args)
-
+    common_args.add_all([ctx.attr.keyed_contexts], map_each = _keyed_contexts_to_args)
     common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
     common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
 
+    inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_contexts
+
     json_args = ctx.actions.args()
-    json_args.add([ctx.executable._rjsone, ctx.outputs.json])
+    json_args.add_all([ctx.executable._rjsone, ctx.outputs.json])
     ctx.actions.run(
         outputs = [ctx.outputs.json],
         inputs = inputs,
@@ -57,7 +61,7 @@ def _rjsone_impl(ctx):
     )
 
     yaml_args = ctx.actions.args()
-    yaml_args.add([ctx.executable._rjsone, ctx.outputs.yaml, "-y"])
+    yaml_args.add_all([ctx.executable._rjsone, ctx.outputs.yaml, "-y"])
     ctx.actions.run(
         outputs = [ctx.outputs.yaml],
         inputs = inputs,
@@ -99,12 +103,12 @@ rjsone = rule(
             doc = "Performs a deep merge of contexts",
         ),
         "_rjsone": attr.label(
-            default = Label(_rjsone_binary_label),
+            default = _rjsone_binary_label,
             cfg = "host",
             executable = True,
         ),
         "_run": attr.label(
-            default = Label(_runner_binary_label),
+            default = _runner_binary_label,
             cfg = "host",
             executable = True,
         ),
