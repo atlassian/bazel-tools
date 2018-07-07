@@ -5,6 +5,18 @@ Defines custom build rules that allow to use rjsone.
 _rjsone_binary_label = "@com_github_wryun_rjsone//:rjsone"
 _runner_binary_label = "@com_github_atlassian_bazel_tools//rjsone:runner"
 
+def _keyed_raw_values_to_args(keyed_raw_values):
+    return [
+        "%s::+%s" % (key, value)
+        for key, value in keyed_raw_values.items()
+    ]
+
+def _keyed_yaml_values_to_args(keyed_yaml_values):
+    return [
+        "%s:+%s" % (key, value)
+        for key, value in keyed_yaml_values.items()
+    ]
+
 def _rjsone_impl(ctx):
     common_args = ctx.actions.args()
     common_args.add([
@@ -28,6 +40,9 @@ def _rjsone_impl(ctx):
             new_args = ["%s:.." % context_key] + [f.path for f in files]
 
         common_args.add(new_args)
+
+    common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
+    common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
 
     json_args = ctx.actions.args()
     json_args.add([ctx.executable._rjsone, ctx.outputs.json])
@@ -65,6 +80,12 @@ rjsone = rule(
         ),
         "keyed_contexts": attr.label_keyed_string_dict(
             allow_files = True,
+        ),
+        "keyed_raw_values": attr.string_dict(
+            doc = "Key to value mappings, values are not interpreted and treated as raw strings",
+        ),
+        "keyed_yaml_values": attr.string_dict(
+            doc = "Key to value mappings, values are interpreted as YAML/JSON",
         ),
         "template": attr.label(
             doc = "Template source",
