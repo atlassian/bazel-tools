@@ -2,9 +2,6 @@
 Defines custom build rules that allow to use rjsone.
 """
 
-_rjsone_binary_label = "@com_github_wryun_rjsone//:rjsone"
-_runner_binary_label = "@com_github_atlassian_bazel_tools//rjsone:runner"
-
 def _keyed_raw_values_to_args(keyed_raw_values):
     return [
         "%s::+%s" % (key, value)
@@ -49,24 +46,22 @@ def _rjsone_impl(ctx):
     inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_contexts
 
     json_args = ctx.actions.args()
-    json_args.add_all([ctx.executable._rjsone, ctx.outputs.json])
+    json_args.add_all(["-o", ctx.outputs.json])
     ctx.actions.run(
         outputs = [ctx.outputs.json],
         inputs = inputs,
-        executable = ctx.executable._run,
-        tools = [ctx.executable._rjsone],
+        executable = ctx.executable._rjsone,
         arguments = [json_args, common_args],
         mnemonic = "Rjsone",
         progress_message = "Rendering JSON into %s" % ctx.outputs.json.short_path,
     )
 
     yaml_args = ctx.actions.args()
-    yaml_args.add_all([ctx.executable._rjsone, ctx.outputs.yaml, "-y"])
+    yaml_args.add_all(["-o", ctx.outputs.yaml, "-y"])
     ctx.actions.run(
         outputs = [ctx.outputs.yaml],
         inputs = inputs,
-        executable = ctx.executable._run,
-        tools = [ctx.executable._rjsone],
+        executable = ctx.executable._rjsone,
         arguments = [yaml_args, common_args],
         mnemonic = "Rjsone",
         progress_message = "Rendering YAML into %s" % ctx.outputs.json.short_path,
@@ -103,12 +98,7 @@ rjsone = rule(
             doc = "Performs a deep merge of contexts",
         ),
         "_rjsone": attr.label(
-            default = _rjsone_binary_label,
-            cfg = "host",
-            executable = True,
-        ),
-        "_run": attr.label(
-            default = _runner_binary_label,
+            default = "@com_github_wryun_rjsone//:rjsone",
             cfg = "host",
             executable = True,
         ),

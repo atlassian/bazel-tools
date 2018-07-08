@@ -14,14 +14,14 @@ http_archive(
     urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.tar.gz"],
 )
 
-load("@com_github_atlassian_bazel_tools//rjsone:deps.bzl", "rjsone_dependencies")
+load("@com_github_atlassian_bazel_tools//:rjsone/deps.bzl", "rjsone_dependencies")
 
 rjsone_dependencies()
 ```
 
 `BUILD.bazel` file:
 ```bzl
-load("@com_github_atlassian_bazel_tools//rjsone/def.bzl", "rjsone")
+load("@com_github_atlassian_bazel_tools//:rjsone/def.bzl", "rjsone")
 
 filegroup(
     name = "list",
