@@ -18,7 +18,9 @@ def _multirun_impl(ctx):
         if exe == None:
             fail("%s does not have an executable file" % command.label, attr = "commands")
 
-        transitive_depsets.append(info.default_runfiles.files)
+        default_runfiles = info.default_runfiles
+        if default_runfiles != None:
+            transitive_depsets.append(default_runfiles.files)
         content.append("echo Running %s\n./%s\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
