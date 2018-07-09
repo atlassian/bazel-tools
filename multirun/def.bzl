@@ -1,6 +1,6 @@
 load("@bazel_skylib//:lib.bzl", "shell")
 
-_CONTENT_PREFIX = """#!/bin/bash
+_CONTENT_PREFIX = """#!/usr/bin/env bash
 
 set -euo pipefail
 
