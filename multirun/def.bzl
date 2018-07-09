@@ -11,13 +11,14 @@ def _multirun_impl(ctx):
     content = [_content_prefix]
 
     for command in ctx.attr.commands:
-        if command.files_to_run == None:
+        info = command[DefaultInfo]
+        if info.files_to_run == None:
             fail("%s is not executable" % command.label, attr = "commands")
-        exe = command.files_to_run.executable
+        exe = info.files_to_run.executable
         if exe == None:
             fail("%s does not have an executable file" % command.label, attr = "commands")
 
-        transitive_depsets.append(command.default_runfiles.files)
+        transitive_depsets.append(info.default_runfiles.files)
         content.append("echo Running %s\n./%s\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
