@@ -1,6 +1,6 @@
 load("@bazel_skylib//:lib.bzl", "shell")
 
-_content_prefix = """#!/bin/bash
+_CONTENT_PREFIX = """#!/bin/bash
 
 set -euo pipefail
 
@@ -8,7 +8,7 @@ set -euo pipefail
 
 def _multirun_impl(ctx):
     transitive_depsets = []
-    content = [_content_prefix]
+    content = [_CONTENT_PREFIX]
 
     for command in ctx.attr.commands:
         info = command[DefaultInfo]
