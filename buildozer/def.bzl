@@ -77,13 +77,12 @@ _buildozer = rule(
             default = True,
         ),
         "_buildozer": attr.label(
-            default = Label("@com_github_bazelbuild_buildtools//buildozer"),
+            default = "@com_github_bazelbuild_buildtools//buildozer",
             cfg = "host",
-            allow_single_file = True,
             executable = True,
         ),
         "_runner": attr.label(
-            default = Label("@com_github_atlassian_bazel_tools//buildozer:runner.bash.template"),
+            default = "@com_github_atlassian_bazel_tools//buildozer:runner.bash.template",
             allow_single_file = True,
         ),
     },

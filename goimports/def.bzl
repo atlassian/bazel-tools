@@ -79,13 +79,12 @@ _goimports = rule(
             doc = "Write result to source file instead of stdout",
         ),
         "_goimports": attr.label(
-            default = Label("@org_golang_x_tools//cmd/goimports"),
+            default = "@org_golang_x_tools//cmd/goimports",
             cfg = "host",
-            allow_single_file = True,
             executable = True,
         ),
         "_runner": attr.label(
-            default = Label("@com_github_atlassian_bazel_tools//goimports:runner.bash.template"),
+            default = "@com_github_atlassian_bazel_tools//goimports:runner.bash.template",
             allow_single_file = True,
         ),
     },
