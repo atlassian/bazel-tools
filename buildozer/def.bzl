@@ -22,6 +22,7 @@ def _buildozer_impl(ctx):
     substitutions = {
         "@@ARGS@@": shell.array_literal(args),
         "@@BUILDOZER_SHORT_PATH@@": shell.quote(ctx.executable._buildozer.short_path),
+        "@@ERROR_ON_NO_CHANGES@@": shell.quote(str(ctx.attr.error_on_no_changes).lower()),
     }
     ctx.actions.expand_template(
         template = ctx.file._runner,
@@ -75,6 +76,9 @@ _buildozer = rule(
         "delete_with_comments": attr.bool(
             doc = "If a list attribute should be deleted even if there is a comment attached to it",
             default = True,
+        ),
+        "error_on_no_changes": attr.bool(
+            doc = "Exit with 3 on success, when no changes were made",
         ),
         "_buildozer": attr.label(
             default = "@com_github_bazelbuild_buildtools//buildozer",
