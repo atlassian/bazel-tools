@@ -45,6 +45,10 @@ def _rjsone_impl(ctx):
 
     inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_contexts
 
+    if ctx.attr.stamp:
+        inputs.extend([ctx.info_file, ctx.version_file])
+        common_args.add_all([":kv:" + ctx.info_file.path, ":kv:" + ctx.version_file.path])
+
     json_args = ctx.actions.args()
     json_args.add_all(["-o", ctx.outputs.json])
     ctx.actions.run(
@@ -64,7 +68,7 @@ def _rjsone_impl(ctx):
         executable = ctx.executable._rjsone,
         arguments = [yaml_args, common_args],
         mnemonic = "Rjsone",
-        progress_message = "Rendering YAML into %s" % ctx.outputs.json.short_path,
+        progress_message = "Rendering YAML into %s" % ctx.outputs.yaml.short_path,
     )
 
 rjsone = rule(
@@ -96,6 +100,9 @@ rjsone = rule(
         ),
         "deep_merge": attr.bool(
             doc = "Performs a deep merge of contexts",
+        ),
+        "stamp": attr.bool(
+            doc = "Enable stamping. Workspace status variables become available as plain strings",
         ),
         "_rjsone": attr.label(
             default = "@com_github_wryun_rjsone//:rjsone",
