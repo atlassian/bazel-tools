@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GOMETALINTER_SHORT_PATH=@@GOMETALINTER_SHORT_PATH@@
+ARGS=@@ARGS@@
+PREFIX_DIR_PATH=@@PREFIX_DIR_PATH@@
+PREFIX_BASE_NAME=@@PREFIX_BASE_NAME@@
+
+mkdir -p "src/$PREFIX_DIR_PATH"
+ln -snf "$BUILD_WORKSPACE_DIRECTORY" "src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
+
+NEW_GOPATH=$(pwd -P)
+NEW_GOROOT="$NEW_GOPATH/external/go_sdk"
+NEW_PATH="$NEW_GOPATH/external/com_github_atlassian_bazel_tools_gometalinter:$NEW_GOROOT/bin:$PATH"
+
+gometalinter_short_path=$(readlink "$GOMETALINTER_SHORT_PATH")
+CURDIR="$NEW_GOPATH/src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
+cd "$CURDIR"
+/usr/bin/env -i GOPATH="$NEW_GOPATH" GOROOT="$NEW_GOROOT" PATH="$NEW_PATH" PWD="$CURDIR" "$gometalinter_short_path" "${ARGS[@]}"
