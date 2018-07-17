@@ -52,12 +52,11 @@ _multirun = rule(
     executable = True,
 )
 
-def multirun(name, **kwargs):
+def multirun(**kwargs):
     tags = kwargs.get("tags", [])
     if "manual" not in tags:
         tags.append("manual")
         kwargs["tags"] = tags
     _multirun(
-        name = name,
         **kwargs
     )

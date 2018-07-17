@@ -93,12 +93,11 @@ _buildozer = rule(
     executable = True,
 )
 
-def buildozer(name, **kwargs):
+def buildozer(**kwargs):
     tags = kwargs.get("tags", [])
     if "manual" not in tags:
         tags.append("manual")
         kwargs["tags"] = tags
     _buildozer(
-        name = name,
         **kwargs
     )

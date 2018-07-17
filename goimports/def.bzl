@@ -91,12 +91,11 @@ _goimports = rule(
     executable = True,
 )
 
-def goimports(name, **kwargs):
+def goimports(**kwargs):
     tags = kwargs.get("tags", [])
     if "manual" not in tags:
         tags.append("manual")
         kwargs["tags"] = tags
     _goimports(
-        name = name,
         **kwargs
     )
