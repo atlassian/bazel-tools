@@ -1,4 +1,5 @@
 load("@bazel_skylib//:lib.bzl", "paths", "shell")
+load("@io_bazel_rules_go//go:def.bzl", "GoSDK")
 
 def _gometalinter_impl(ctx):
     args = []
@@ -8,11 +9,13 @@ def _gometalinter_impl(ctx):
         args.append("--no-config")
     args.extend(ctx.attr.paths)
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
+    sdk = ctx.attr._go_sdk[GoSDK]
     substitutions = {
+        "@@GOMETALINTER_SHORT_PATH@@": shell.quote(ctx.executable._gometalinter.short_path),
+        "@@ARGS@@": shell.array_literal(args),
         "@@PREFIX_DIR_PATH@@": shell.quote(paths.dirname(ctx.attr.prefix)),
         "@@PREFIX_BASE_NAME@@": shell.quote(paths.basename(ctx.attr.prefix)),
-        "@@ARGS@@": shell.array_literal(args),
-        "@@GOMETALINTER_SHORT_PATH@@": shell.quote(ctx.executable._gometalinter.short_path),
+        "@@NEW_GOROOT@@": shell.quote(sdk.root_file.dirname),
     }
     ctx.actions.expand_template(
         template = ctx.file._runner,
@@ -20,14 +23,16 @@ def _gometalinter_impl(ctx):
         substitutions = substitutions,
         is_executable = True,
     )
-    transitive_depsets = []
+    transitive_depsets = [
+        depset(sdk.srcs),
+        depset(sdk.tools),
+    ]
     default_runfiles = ctx.attr._gometalinter[DefaultInfo].default_runfiles
     if default_runfiles != None:
         transitive_depsets.append(default_runfiles.files)
 
     runfiles = ctx.runfiles(
-        files = ctx.files._sdk_files,
-        transitive_files = depset([], transitive = transitive_depsets),
+        transitive_files = depset(transitive = transitive_depsets),
     )
     return [DefaultInfo(
         files = depset([out_file]),
@@ -59,8 +64,9 @@ _gometalinter = rule(
             default = "@com_github_atlassian_bazel_tools//gometalinter:runner.bash.template",
             allow_single_file = True,
         ),
-        "_sdk_files": attr.label(
-            default = "@go_sdk//:files",
+        "_go_sdk": attr.label(
+            providers = [GoSDK],
+            default = "@go_sdk//:go_sdk",
         ),
     },
     executable = True,
