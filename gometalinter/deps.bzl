@@ -1,8 +1,8 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 _GOMETALINTER_TARBALLS = {
-    "darwin_amd64": ("gometalinter-2.0.5-darwin-amd64.tar.gz", "gometalinter-2.0.5-darwin-amd64", "d2571dd081a00752fc7876a9f64042937e9d75e7968465e3c5b5ee9dad64a6c7"),
-    "linux_amd64": ("gometalinter-2.0.5-linux-amd64.tar.gz", "gometalinter-2.0.5-linux-amd64", "83ff1a03626130d249b96b7e321d9c7a03e5f943c042a0e07011779be1adf8e8"),
+    "darwin_amd64": ("gometalinter-2.0.10-darwin-amd64.tar.gz", "gometalinter-2.0.10-darwin-amd64", "b21c28a236f05d1cd1a394240388afdc3a20a2ddfeb34acb19c651d5d1936523"),
+    "linux_amd64": ("gometalinter-2.0.10-linux-amd64.tar.gz", "gometalinter-2.0.10-linux-amd64", "111f656a8599349168544b9ae0dbc93240edcb28a81a92e9810ceaa40575545a"),
 }
 
 def _gometalinter_download_impl(ctx):
@@ -16,7 +16,7 @@ def _gometalinter_download_impl(ctx):
         fail("Unsupported host {}".format(host))
 
     filename, prefix, sha256 = _GOMETALINTER_TARBALLS[host]
-    url = "https://github.com/alecthomas/gometalinter/releases/download/v2.0.5/" + filename
+    url = "https://github.com/alecthomas/gometalinter/releases/download/v2.0.10/" + filename
 
     ctx.template(
         "BUILD.bazel",
