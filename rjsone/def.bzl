@@ -43,7 +43,7 @@ def _rjsone_impl(ctx):
     common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
     common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
 
-    inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_contexts
+    inputs = [ctx.file.template] + ctx.files.deps + ctx.files.contexts + ctx.files.keyed_contexts
 
     if ctx.attr.stamp:
         inputs.extend([ctx.info_file, ctx.version_file])
@@ -75,6 +75,11 @@ rjsone = rule(
     implementation = _rjsone_impl,
     attrs = {
         "contexts": attr.label_list(
+            allow_files = True,
+        ),
+        # if volatile variable changes, e.g. BUILD_TIMESTAMP, this normally doesn't cause rule to rebuild, declaring a dependency will force the rebuild if the
+        # dependency changes
+        "deps": attr.label_list(
             allow_files = True,
         ),
         "indentation": attr.int(
