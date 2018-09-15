@@ -7,6 +7,8 @@ def _gometalinter_impl(ctx):
         args.append("--config=" + ctx.file.config.short_path)
     else:
         args.append("--no-config")
+    if ctx.attr.fast:
+        args.append("--fast")
     args.extend(ctx.attr.paths)
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     sdk = ctx.attr._go_sdk[GoSDK]
@@ -54,6 +56,10 @@ _gometalinter = rule(
         "prefix": attr.string(
             mandatory = True,
             doc = "Go import path of this project i.e. where in GOPATH you would put it. E.g. github.com/atlassian/bazel-tools",
+        ),
+        "fast": attr.bool(
+            default = False,
+            doc = "if the --fast flag should be set",
         ),
         "_gometalinter": attr.label(
             default = "@com_github_atlassian_bazel_tools_gometalinter//:linter",

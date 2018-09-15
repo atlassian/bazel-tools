@@ -9,7 +9,7 @@ ERROR_ON_NO_CHANGES=@@ERROR_ON_NO_CHANGES@@
 buildozer_short_path=$(readlink "$BUILDOZER_SHORT_PATH")
 cd "$BUILD_WORKSPACE_DIRECTORY"
 set +e
-"$buildozer_short_path" "${ARGS[@]}"
+"$buildozer_short_path" "${ARGS[@]}" $@
 ret=$?
 if [[ "$ret" -eq 3 && "$ERROR_ON_NO_CHANGES" == "false" ]]; then
     exit 0
