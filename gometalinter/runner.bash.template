@@ -19,4 +19,4 @@ NEW_PATH="$NEW_GOPATH/external/com_github_atlassian_bazel_tools_gometalinter:$NE
 gometalinter_short_path=$(readlink "$GOMETALINTER_SHORT_PATH")
 CURDIR="$NEW_GOPATH/src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
 cd "$CURDIR"
-/usr/bin/env -i GOPATH="$NEW_GOPATH" GOROOT="$NEW_GOROOT" PATH="$NEW_PATH" PWD="$CURDIR" "$gometalinter_short_path" "${ARGS[@]}"
+/usr/bin/env -i GOPATH="$NEW_GOPATH" GOROOT="$NEW_GOROOT" PATH="$NEW_PATH" PWD="$CURDIR" "$gometalinter_short_path" "${ARGS[@]}" $@
