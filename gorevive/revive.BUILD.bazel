@@ -1,0 +1,56 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "main.go",
+    ],
+    importpath = "github.com/mgechev/revive",
+    visibility = ["//visibility:private"],
+    deps = [
+        ":formatter",
+        ":lint",
+        ":rule",
+        "@com_github_burntsushi_toml//:go_default_library",
+        "@com_github_fatih_color//:go_default_library",
+        "@com_github_mgechev_dots//:go_default_library",
+    ],
+)
+
+go_library(
+    name = "lint",
+    srcs = glob(["lint/**/*.go"]),
+    importpath = "github.com/mgechev/revive/lint",
+    visibility = ["//visibility:public"],
+    deps = ["@org_golang_x_tools//go/gcexportdata:go_default_library"],
+)
+
+go_library(
+    name = "formatter",
+    srcs = glob(["formatter/**/*.go"]),
+    importpath = "github.com/mgechev/revive/formatter",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lint",
+        "@com_github_fatih_color//:go_default_library",
+        "@com_github_olekukonko_tablewriter//:go_default_library",
+    ],
+)
+
+go_library(
+    name = "rule",
+    srcs = glob(["rule/**/*.go"]),
+    importpath = "github.com/mgechev/revive/rule",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lint",
+        "@com_github_fatih_structtag//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "revive",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
