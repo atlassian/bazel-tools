@@ -87,7 +87,6 @@ go_revive_test(
     # this rule. Default: False.
     debug = True,
 )
-
 ```
 
 Run as a regular Bazel test:

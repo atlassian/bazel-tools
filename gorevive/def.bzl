@@ -63,8 +63,7 @@ go_revive_test = rule(
             allow_single_file = True,
         ),
         "_revive_executable": attr.label(
-            default = Label("@com_github_mgechev_revive//:revive"),
-            allow_single_file = True,
+            default = "@com_github_mgechev_revive//:revive",
             executable = True,
             cfg = "host",
         ),
