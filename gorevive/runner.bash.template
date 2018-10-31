@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEBUG=@@DEBUG@@
+
+if [[ ${DEBUG} == 1 ]]; then
+    set -x
+    echo "runfiles directory listing:"
+    ls -lhR
+fi
+
+@@REVIVE@@ -config @@CONFIG@@ -formatter @@FORMATTER@@ @@EXCLUDE@@ @@PATHS@@
+exit $?

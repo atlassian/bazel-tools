@@ -1,0 +1,24 @@
+exports_files(["defaults.toml"])
+
+filegroup(
+    name = "go_srcs",
+    srcs = glob(["src/*.go"]),
+    visibility = ["//visibility:private"],
+)
+
+load("@com_github_atlassian_bazel_tools//gorevive:def.bzl", "go_revive_test")
+
+go_revive_test(
+    name = "revive_test",
+    # Go source files to be linted.
+    srcs = [":go_srcs"],
+    # Revive .toml config.
+    config = "defaults.toml",
+    formatter = "stylish",
+    # The paths have to be relative to the workspace root.
+    paths = ["src/..."],
+    # Set debug=True if you need to see the details of the execution of this rule. Default: False.
+    debug = True,
+    # Use tags if needed.
+    tags = ["manual"],
+)
