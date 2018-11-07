@@ -14,11 +14,11 @@ go_revive_test(
     srcs = [":go_srcs"],
     # Revive .toml config.
     config = "defaults.toml",
+    # Set debug=True if you need to see the details of the execution of this rule. Default: False.
+    debug = True,
     formatter = "stylish",
     # The paths have to be relative to the workspace root.
     paths = ["src/..."],
-    # Set debug=True if you need to see the details of the execution of this rule. Default: False.
-    debug = True,
     # Use tags if needed.
     tags = ["manual"],
 )

@@ -1,4 +1,4 @@
-load("@bazel_skylib//:lib.bzl", "shell", "paths")
+load("@bazel_skylib//:lib.bzl", "paths", "shell")
 
 def _go_revive_impl(ctx):
     substitutions = {
@@ -33,7 +33,7 @@ go_revive_test = rule(
     attrs = {
         "srcs": attr.label_list(
             allow_files = True,
-            doc = "Go source files to be linted."
+            doc = "Go source files to be linted.",
         ),
         "config": attr.label(
             mandatory = True,
