@@ -14,16 +14,30 @@ def _keyed_yaml_values_to_args(keyed_yaml_values):
         for key, value in keyed_yaml_values.items()
     ]
 
-def _keyed_contexts_to_args(keyed_contexts):
+def _keyed_yaml_contexts_to_args(keyed_yaml_contexts):
     args = []
-    for context_target, context_key in keyed_contexts.items():
+    for context_target, context_key in keyed_yaml_contexts.items():
         files = context_target.files.to_list()
         if len(files) == 0:
-            fail("Target %s produces no files" % context_target.label, attr = "keyed_contexts")
+            fail("Target %s produces no files" % context_target.label, attr = "keyed_yaml_contexts")
         elif len(files) == 1:
             args.append("%s:%s" % (context_key, files[0].path))
         else:
             args.append("%s:.." % context_key)
+            args.extend([f.path for f in files])
+
+    return args
+
+def _keyed_raw_contexts_to_args(keyed_raw_contexts):
+    args = []
+    for context_target, context_key in keyed_raw_contexts.items():
+        files = context_target.files.to_list()
+        if len(files) == 0:
+            fail("Target %s produces no files" % context_target.label, attr = "keyed_raw_contexts")
+        elif len(files) == 1:
+            args.append("%s::%s" % (context_key, files[0].path))
+        else:
+            args.append("%s::.." % context_key)
             args.extend([f.path for f in files])
 
     return args
@@ -39,11 +53,12 @@ def _rjsone_impl(ctx):
         "-v=" + str(ctx.attr.verbose).lower(),
     ])
     common_args.add_all(ctx.files.contexts)
-    common_args.add_all([ctx.attr.keyed_contexts], map_each = _keyed_contexts_to_args)
+    common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_to_args)
+    common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_to_args)
     common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
     common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
 
-    inputs = [ctx.file.template] + ctx.files.deps + ctx.files.contexts + ctx.files.keyed_contexts
+    inputs = [ctx.file.template] + ctx.files.deps + ctx.files.contexts + ctx.files.keyed_yaml_contexts + ctx.files.keyed_raw_contexts
 
     if ctx.attr.stamp:
         inputs.extend([ctx.info_file, ctx.version_file])
@@ -86,7 +101,12 @@ rjsone = rule(
             default = 2,
             doc = "Indentation level of JSON output; 0 means no pretty-printing",
         ),
-        "keyed_contexts": attr.label_keyed_string_dict(
+        "keyed_raw_contexts": attr.label_keyed_string_dict(
+            doc = "File to key mappings, files are not interpreted and treated as raw strings",
+            allow_files = True,
+        ),
+        "keyed_yaml_contexts": attr.label_keyed_string_dict(
+            doc = "File to key mappings, files are interpreted as YAML/JSON",
             allow_files = True,
         ),
         "keyed_raw_values": attr.string_dict(
