@@ -18,9 +18,7 @@ def _keyed_yaml_contexts_to_args(keyed_yaml_contexts):
     args = []
     for context_target, context_key in keyed_yaml_contexts.items():
         files = context_target.files.to_list()
-        if len(files) == 0:
-            fail("Target %s produces no files" % context_target.label, attr = "keyed_yaml_contexts")
-        elif len(files) == 1:
+        if len(files) == 1:
             args.append("%s:%s" % (context_key, files[0].path))
         else:
             args.append("%s:.." % context_key)
@@ -32,9 +30,7 @@ def _keyed_raw_contexts_to_args(keyed_raw_contexts):
     args = []
     for context_target, context_key in keyed_raw_contexts.items():
         files = context_target.files.to_list()
-        if len(files) == 0:
-            fail("Target %s produces no files" % context_target.label, attr = "keyed_raw_contexts")
-        elif len(files) == 1:
+        if len(files) == 1:
             args.append("%s::%s" % (context_key, files[0].path))
         else:
             args.append("%s::.." % context_key)
