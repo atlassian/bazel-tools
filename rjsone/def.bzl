@@ -38,6 +38,24 @@ def _keyed_raw_contexts_to_args(keyed_raw_contexts):
 
     return args
 
+def _keyed_yaml_contexts_meta_to_args(keyed_yaml_contexts):
+    args = []
+    for context_target, context_key in keyed_yaml_contexts.items():
+        files = context_target.files.to_list()
+        args.append("%s:..." % context_key)
+        args.extend([f.path for f in files])
+
+    return args
+
+def _keyed_raw_contexts_meta_to_args(keyed_raw_contexts):
+    args = []
+    for context_target, context_key in keyed_raw_contexts.items():
+        files = context_target.files.to_list()
+        args.append("%s::..." % context_key)
+        args.extend([f.path for f in files])
+
+    return args
+
 def _rjsone_impl(ctx):
     common_args = ctx.actions.args()
     common_args.add_all([
@@ -49,10 +67,14 @@ def _rjsone_impl(ctx):
         "-v=" + str(ctx.attr.verbose).lower(),
     ])
     common_args.add_all(ctx.files.contexts)
-    common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_to_args)
-    common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_to_args)
     common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
     common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
+    if ctx.attr.load_metadata:
+        common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_meta_to_args)
+        common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_meta_to_args)
+    else:
+        common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_to_args)
+        common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_to_args)
 
     inputs = [ctx.file.template] + ctx.files.deps + ctx.files.contexts + ctx.files.keyed_yaml_contexts + ctx.files.keyed_raw_contexts
 
@@ -92,6 +114,9 @@ rjsone = rule(
         # dependency changes
         "deps": attr.label_list(
             allow_files = True,
+        ),
+        "load_metadata": attr.bool(
+            doc = "Load file metadata information (filename, basename, content) for keyed_raw_contexts and keyed_yaml_contexts",
         ),
         "indentation": attr.int(
             default = 2,
