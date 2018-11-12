@@ -38,7 +38,7 @@ def _keyed_raw_contexts_to_args(keyed_raw_contexts):
 
     return args
 
-def _keyed_yaml_contexts_meta_to_args(keyed_yaml_contexts):
+def _keyed_meta_yaml_contexts_to_args(keyed_yaml_contexts):
     args = []
     for context_target, context_key in keyed_yaml_contexts.items():
         files = context_target.files.to_list()
@@ -47,7 +47,7 @@ def _keyed_yaml_contexts_meta_to_args(keyed_yaml_contexts):
 
     return args
 
-def _keyed_raw_contexts_meta_to_args(keyed_raw_contexts):
+def _keyed_meta_raw_contexts_to_args(keyed_raw_contexts):
     args = []
     for context_target, context_key in keyed_raw_contexts.items():
         files = context_target.files.to_list()
@@ -66,17 +66,19 @@ def _rjsone_impl(ctx):
         "-d=" + str(ctx.attr.deep_merge).lower(),
         "-v=" + str(ctx.attr.verbose).lower(),
     ])
-    common_args.add_all(ctx.files.contexts)
+    common_args.add_all(ctx.files.yaml_contexts)
     common_args.add_all([ctx.attr.keyed_raw_values], map_each = _keyed_raw_values_to_args)
     common_args.add_all([ctx.attr.keyed_yaml_values], map_each = _keyed_yaml_values_to_args)
-    if ctx.attr.load_metadata:
-        common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_meta_to_args)
-        common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_meta_to_args)
-    else:
-        common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_to_args)
-        common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_to_args)
 
-    inputs = [ctx.file.template] + ctx.files.contexts + ctx.files.keyed_yaml_contexts + ctx.files.keyed_raw_contexts
+    common_args.add_all([ctx.attr.keyed_meta_yaml_contexts], map_each = _keyed_meta_yaml_contexts_to_args)
+    common_args.add_all([ctx.attr.keyed_meta_raw_contexts], map_each = _keyed_meta_raw_contexts_to_args)
+
+    common_args.add_all([ctx.attr.keyed_yaml_contexts], map_each = _keyed_yaml_contexts_to_args)
+    common_args.add_all([ctx.attr.keyed_raw_contexts], map_each = _keyed_raw_contexts_to_args)
+
+    inputs = [ctx.file.template] + ctx.files.yaml_contexts + \
+             ctx.files.keyed_yaml_contexts + ctx.files.keyed_raw_contexts + \
+             ctx.files.keyed_meta_yaml_contexts + ctx.files.keyed_meta_raw_contexts
 
     if ctx.attr.stamp:
         inputs.extend([ctx.info_file, ctx.version_file])
@@ -107,15 +109,13 @@ def _rjsone_impl(ctx):
 rjsone = rule(
     implementation = _rjsone_impl,
     attrs = {
-        "contexts": attr.label_list(
+        "yaml_contexts": attr.label_list(
+            doc = "YAML/JSON files to use as context",
             allow_files = True,
-        ),
-        "load_metadata": attr.bool(
-            doc = "Load file metadata information (filename, basename, content) for keyed_raw_contexts and keyed_yaml_contexts",
         ),
         "indentation": attr.int(
             default = 2,
-            doc = "Indentation level of JSON output; 0 means no pretty-printing",
+            doc = "Indentation level of YAML/JSON output; 0 means no pretty-printing",
         ),
         "keyed_raw_contexts": attr.label_keyed_string_dict(
             doc = "File to key mappings, files are not interpreted and treated as raw strings",
@@ -123,6 +123,14 @@ rjsone = rule(
         ),
         "keyed_yaml_contexts": attr.label_keyed_string_dict(
             doc = "File to key mappings, files are interpreted as YAML/JSON",
+            allow_files = True,
+        ),
+        "keyed_meta_raw_contexts": attr.label_keyed_string_dict(
+            doc = "File to key mappings, files are not interpreted and treated as raw strings. Includes file metadata information (name, basename, content)",
+            allow_files = True,
+        ),
+        "keyed_meta_yaml_contexts": attr.label_keyed_string_dict(
+            doc = "File to key mappings, files are interpreted as YAML/JSON. Includes file metadata information (name, basename, content)",
             allow_files = True,
         ),
         "keyed_raw_values": attr.string_dict(
