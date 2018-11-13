@@ -52,6 +52,7 @@ goimports(
     name = "goimports",
     display_diffs = True,
     write = True,
+    prefix = "<your project prefix>",
 )
 ```
 Invoke with
