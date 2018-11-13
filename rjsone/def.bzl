@@ -115,7 +115,7 @@ rjsone = rule(
         ),
         "indentation": attr.int(
             default = 2,
-            doc = "Indentation level of YAML/JSON output; 0 means no pretty-printing",
+            doc = "Indentation level of JSON output; 0 means no pretty-printing",
         ),
         "keyed_raw_contexts": attr.label_keyed_string_dict(
             doc = "File to key mappings, files are not interpreted and treated as raw strings",
