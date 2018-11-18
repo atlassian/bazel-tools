@@ -21,6 +21,7 @@ func main() {
 
 	flag.StringVar(&args.templateFile, "t", "", "file to use for template")
 	flag.StringVar(&args.outputFile, "o", "", "output to a file")
+	flag.BoolVar(&args.executable, "e", false, "make file executable")
 	flag.Parse()
 	args.keyedContextFiles = flag.Args()
 	if err := args.run(); err != nil {
@@ -33,6 +34,7 @@ type arguments struct {
 	templateFile      string
 	keyedContextFiles []string
 	outputFile        string
+	executable        bool
 }
 
 func (a arguments) readContext() (map[string]interface{} /*context*/, error) {
@@ -55,11 +57,7 @@ func (a arguments) readContext() (map[string]interface{} /*context*/, error) {
 	return context, nil
 }
 
-func (a arguments) run() (finalError error) {
-	context, err := a.readContext()
-	if err != nil {
-		return err
-	}
+func (a arguments) processTemplate(context map[string]interface{}) (finalError error) {
 	closeWithError := func(c io.Closer) {
 		if err := c.Close(); err != nil && finalError == nil {
 			finalError = err
@@ -86,6 +84,23 @@ func (a arguments) run() (finalError error) {
 	if err != nil {
 		return fmt.Errorf("failed to execute template: %v", err)
 	}
+	return nil
+}
 
+func (a arguments) run() (finalError error) {
+	context, err := a.readContext()
+	if err != nil {
+		return err
+	}
+	err = a.processTemplate(context)
+	if err != nil {
+		return err
+	}
+	if a.executable {
+		err = os.Chmod(a.outputFile, 0755)
+		if err != nil {
+			return fmt.Errorf("failed to set executable bit on %q: %v", a.outputFile, err)
+		}
+	}
 	return nil
 }

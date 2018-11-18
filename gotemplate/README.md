@@ -4,7 +4,8 @@ Bazel rule for Go's [`text/template`](https://golang.org/pkg/text/template/) pac
 
 ## Setup and usage via Bazel
 
-`WORKSPACE` file:
+### `WORKSPACE` file
+
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
@@ -19,21 +20,23 @@ load("@com_github_atlassian_bazel_tools//gotemplate:deps.bzl", "gotemplate_depen
 gotemplate_dependencies()
 ```
 
+### Simple templating
+
 `BUILD.bazel` file:
 ```bzl
 load("@com_github_atlassian_bazel_tools//gotemplate:def.bzl", "gotemplate")
 
 gotemplate(
     name = "something",
-    contexts = {
+    yaml_contexts = {
         "some.ctx1.yaml": "one",
         "some.ctx2.yaml": "two",
     },
-    template = "some.template.txt",
+    template = "some-template.txt",
 )
 ```
 
-`some.template.txt`:
+`some-template.txt`:
 ```text
 bla bla bla
 {{ .one.a }} {{ .two }}
@@ -53,5 +56,38 @@ bazel build :something
 Output file will contain:
 ```text
 bla bla bla
+1 map[b:2]
+```
+
+### Executable files
+
+You can build executable files using `gotemplate_exec` rule.
+
+`BUILD.bazel` file:
+```bzl
+load("@com_github_atlassian_bazel_tools//gotemplate:def.bzl", "gotemplate_exec")
+
+gotemplate_exec(
+    name = "something-else.bash",
+    yaml_contexts = {
+        "some.ctx1.yaml": "one",
+        "some.ctx2.yaml": "two",
+    },
+    template = "some-executable-template.bash",
+)
+```
+
+`some-executable-template.bash`:
+```text
+#!/usr/bin/env bash
+
+echo '{{ .one.a }} {{ .two }}'
+```
+To run this example execute:
+```console
+bazel run :something-else.bash
+```
+Output file will contain:
+```text
 1 map[b:2]
 ```
