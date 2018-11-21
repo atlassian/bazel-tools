@@ -22,6 +22,10 @@ def _gotemplate_impl(ctx):
     args = ctx.actions.args()
     args.add_all([
         "-e=false",
+        "-ld",
+        ctx.attr.left_delimiter,
+        "-rd",
+        ctx.attr.right_delimiter,
         "-t",
         ctx.file.template,
         "-o",
@@ -46,6 +50,10 @@ def _gotemplate_exec_impl(ctx):
     args = ctx.actions.args()
     args.add_all([
         "-e=true",
+        "-ld",
+        ctx.attr.left_delimiter,
+        "-rd",
+        ctx.attr.right_delimiter,
         "-t",
         ctx.file.template,
         "-o",
@@ -75,6 +83,14 @@ _attributes = {
         doc = "Template source",
         allow_single_file = True,
         mandatory = True,
+    ),
+    "left_delimiter": attr.string(
+        doc = "Left hand side delimiter used in template",
+        default = "{{",
+    ),
+    "right_delimiter": attr.string(
+        doc = "Right hand side delimiter used in template",
+        default = "}}",
     ),
     "_gotemplate": attr.label(
         default = "@com_github_atlassian_bazel_tools//gotemplate",

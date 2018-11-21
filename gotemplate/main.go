@@ -21,6 +21,8 @@ func main() {
 
 	flag.StringVar(&args.templateFile, "t", "", "file to use for template")
 	flag.StringVar(&args.outputFile, "o", "", "output to a file")
+	flag.StringVar(&args.leftDelim, "ld", "{{", "left hand side delimiter used in template")
+	flag.StringVar(&args.rightDelim, "ld", "{{", "right hand side delimiter used in template")
 	flag.BoolVar(&args.executable, "e", false, "make file executable")
 	flag.Parse()
 	args.keyedContextFiles = flag.Args()
@@ -31,10 +33,11 @@ func main() {
 }
 
 type arguments struct {
-	templateFile      string
-	keyedContextFiles []string
-	outputFile        string
-	executable        bool
+	templateFile          string
+	keyedContextFiles     []string
+	outputFile            string
+	leftDelim, rightDelim string
+	executable            bool
 }
 
 func (a arguments) readContext() (map[string]interface{} /*context*/, error) {
@@ -75,7 +78,7 @@ func (a arguments) processTemplate(context map[string]interface{}) (finalError e
 	}
 	defer closeWithError(out)
 
-	tmpl, err := template.New("template").Parse(string(data))
+	tmpl, err := template.New("template").Delims(a.leftDelim, a.rightDelim).Parse(string(data))
 	if err != nil {
 		return fmt.Errorf("failed to parse template: %v", err)
 	}
