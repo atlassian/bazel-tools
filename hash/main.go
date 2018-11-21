@@ -49,7 +49,14 @@ func (a arguments) run() error {
 		return fmt.Errorf("unsupported hashing algorithm %q", a.algorithm)
 	}
 
+	first := true
+	separator := []byte{0}
 	for _, file := range a.files {
+		if first {
+			first = false
+		} else {
+			h.Write(separator) // ignore error. Hash.Write() promises to never return an error
+		}
 		err := hashFile(file, h)
 		if err != nil {
 			return fmt.Errorf("failed to hash file %s", file)
