@@ -2,18 +2,18 @@
 Defines custom build rules that allow to use Go text/template package.
 """
 
-def _context_to_args(context):
+def _yaml_contexts_to_args(context):
     args = []
     for context_target, context_key in context.items():
         if context_key.find(":") != -1:
-            fail("Context key %s must not contain `:`" % context_key, attr = "contexts")
+            fail("Context key %s must not contain `:`" % context_key, attr = "yaml_contexts")
         files = context_target.files.to_list()
         if len(files) == 0:
-            fail("Target %s produces no files" % context_target.label, attr = "contexts")
+            fail("Target %s produces no files" % context_target.label, attr = "yaml_contexts")
         elif len(files) == 1:
             args.append("%s:%s" % (context_key, files[0].path))
         else:
-            fail("Target %s produces more than one file: %d" % (context_target.label, len(files)), attr = "contexts")
+            fail("Target %s produces more than one file: %d" % (context_target.label, len(files)), attr = "yaml_contexts")
 
     return args
 
@@ -31,7 +31,7 @@ def _gotemplate_impl(ctx):
         "-o",
         out_file,
     ])
-    args.add_all([ctx.attr.yaml_contexts], map_each = _context_to_args)
+    args.add_all([ctx.attr.yaml_contexts], map_each = _yaml_contexts_to_args)
 
     ctx.actions.run(
         outputs = [out_file],
@@ -59,7 +59,7 @@ def _gotemplate_exec_impl(ctx):
         "-o",
         out_file,
     ])
-    args.add_all([ctx.attr.yaml_contexts], map_each = _context_to_args)
+    args.add_all([ctx.attr.yaml_contexts], map_each = _yaml_contexts_to_args)
 
     ctx.actions.run(
         outputs = [out_file],
