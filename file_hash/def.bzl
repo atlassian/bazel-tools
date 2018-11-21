@@ -2,7 +2,7 @@
 Defines custom build rules that allow to hash files.
 """
 
-def _hash_impl(ctx):
+def _file_hash_impl(ctx):
     out_file = ctx.actions.declare_file(ctx.label.name)
     args = ctx.actions.args()
     args.add_all([
@@ -26,8 +26,8 @@ def _hash_impl(ctx):
         files = depset([out_file]),
     )
 
-hash = rule(
-    implementation = _hash_impl,
+file_hash = rule(
+    implementation = _file_hash_impl,
     attrs = {
         "files": attr.label_list(
             doc = "Files to hash",
@@ -43,7 +43,7 @@ hash = rule(
             default = True,
         ),
         "_hasher": attr.label(
-            default = "@com_github_atlassian_bazel_tools//hash",
+            default = "@com_github_atlassian_bazel_tools//file_hash",
             cfg = "host",
             executable = True,
         ),

@@ -18,9 +18,9 @@ http_archive(
 
 `BUILD.bazel` file:
 ```bzl
-load("@com_github_atlassian_bazel_tools//hash:def.bzl", "hash")
+load("@com_github_atlassian_bazel_tools//file_hash:def.bzl", "file_hash")
 
-hash(
+file_hash(
     name = "something_sha256",
     algorithm = "sha256",
     hex = True,
