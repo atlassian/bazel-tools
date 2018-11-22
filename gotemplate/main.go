@@ -22,7 +22,7 @@ func main() {
 	flag.StringVar(&args.templateFile, "t", "", "file to use for template")
 	flag.StringVar(&args.outputFile, "o", "", "output to a file")
 	flag.StringVar(&args.leftDelim, "ld", "{{", "left hand side delimiter used in template")
-	flag.StringVar(&args.rightDelim, "rd", "{{", "right hand side delimiter used in template")
+	flag.StringVar(&args.rightDelim, "rd", "}}", "right hand side delimiter used in template")
 	flag.BoolVar(&args.executable, "e", false, "make file executable")
 	flag.Parse()
 	args.keyedContextFiles = flag.Args()
