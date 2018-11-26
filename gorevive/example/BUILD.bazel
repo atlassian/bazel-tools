@@ -1,3 +1,5 @@
+load("@com_github_atlassian_bazel_tools//gorevive:def.bzl", "go_revive_test")
+
 exports_files(["defaults.toml"])
 
 filegroup(
@@ -5,8 +7,6 @@ filegroup(
     srcs = glob(["src/*.go"]),
     visibility = ["//visibility:private"],
 )
-
-load("@com_github_atlassian_bazel_tools//gorevive:def.bzl", "go_revive_test")
 
 go_revive_test(
     name = "revive_test",

@@ -1,4 +1,4 @@
-load("@bazel_skylib//:lib.bzl", "paths", "shell")
+load("@bazel_skylib//:lib.bzl", "shell")
 
 def _go_revive_impl(ctx):
     substitutions = {

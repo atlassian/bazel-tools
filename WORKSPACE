@@ -16,13 +16,13 @@ http_archive(
 
 http_archive(
     name = "com_github_bazelbuild_buildtools",
-    sha256 = "e4c83a7a5d0712e2cea2077112a5eb6bb1af75a84e34c8c9b77330e322966b8b",
-    strip_prefix = "buildtools-e90e7cc6ef3e6d08d4ca8a982935c3eed638e058",
-    urls = ["https://github.com/bazelbuild/buildtools/archive/e90e7cc6ef3e6d08d4ca8a982935c3eed638e058.tar.gz"],
+    sha256 = "953ed402234e54874a2a4020b011fd8d5e6e575883fe2c11fb112819c19edb28",
+    strip_prefix = "buildtools-d39e4d5c25111527369142f16cdb49aa67707313",
+    urls = ["https://github.com/bazelbuild/buildtools/archive/d39e4d5c25111527369142f16cdb49aa67707313.tar.gz"],
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_register_toolchains", "go_rules_dependencies")
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
 
 go_rules_dependencies()

@@ -24,9 +24,9 @@ def buildozer_dependencies():
     _maybe(
         http_archive,
         name = "com_github_bazelbuild_buildtools",
-        sha256 = "681130514b50ee640cd5eee9cbd192fd48072b4bc9abc6a17a1fba7a2817ec0e",
-        strip_prefix = "buildtools-5a4c4ca9753ad0f8f9eb3463d84bc89388846420",
-        urls = ["https://github.com/bazelbuild/buildtools/archive/5a4c4ca9753ad0f8f9eb3463d84bc89388846420.tar.gz"],
+        sha256 = "953ed402234e54874a2a4020b011fd8d5e6e575883fe2c11fb112819c19edb28",
+        strip_prefix = "buildtools-d39e4d5c25111527369142f16cdb49aa67707313",
+        urls = ["https://github.com/bazelbuild/buildtools/archive/d39e4d5c25111527369142f16cdb49aa67707313.tar.gz"],
     )
 
 def _maybe(repo_rule, name, **kwargs):
