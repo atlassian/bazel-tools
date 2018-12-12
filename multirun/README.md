@@ -21,13 +21,24 @@ multirun_dependencies()
 
 `BUILD.bazel` file:
 ```bzl
-load("@com_github_atlassian_bazel_tools//:multirun/def.bzl", "multirun")
+load("@com_github_atlassian_bazel_tools//:multirun/def.bzl", "multirun", "command")
+
+command(
+    name = "command1",
+    command = "//some/label",
+    arguments = {
+        "-arg1": "value1",
+    },
+    environment = {
+        "ABC": "DEF",
+    },
+)
 
 multirun(
     name = "run_all",
     commands = [
         ":command1",
-        ":command2",
+        "//some/other:label",
     ],
 )
 ```
