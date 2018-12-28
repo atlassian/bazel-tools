@@ -91,7 +91,7 @@ def go_revive_dependencies():
     _maybe(
         new_git_repository,
         name = "com_github_mgechev_revive",
-        commit = "4b3d3248652e464035daa220bf276a5826b8d5c6",
+        commit = "b4cc152955fbbcd2afafd5df3d46393d621a7fdf",
         remote = "https://github.com/mgechev/revive.git",
         build_file = "@com_github_atlassian_bazel_tools//gorevive:revive.BUILD.bazel",
     )
