@@ -6,17 +6,17 @@ def goimports_dependencies():
         go_repository,
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sha256 = "8c9751e7683a049a9eabbd75e231a0b96087fcef2934498e87fe19022227bf6b",
-        strip_prefix = "tools-5e66757b835f155f7e50931f54c9f6af8af86f75",
-        urls = ["https://github.com/golang/tools/archive/5e66757b835f155f7e50931f54c9f6af8af86f75.tar.gz"],
+        sha256 = "11629171a39a1cb4d426760005be6f7cb9b4182e4cb2756b7f1c5c2b6ae869fe",
+        strip_prefix = "tools-bf090417da8b6150dcfe96795325f5aa78fff718",
+        urls = ["https://github.com/golang/tools/archive/bf090417da8b6150dcfe96795325f5aa78fff718.tar.gz"],
     )
 
     _maybe(
         http_archive,
         name = "bazel_skylib",
-        sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
-        strip_prefix = "bazel-skylib-0.5.0",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz"],
+        sha256 = "2c62d8cd4ab1e65c08647eb4afe38f51591f43f7f0885e7769832fa137633dcb",
+        strip_prefix = "bazel-skylib-0.7.0",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.7.0.tar.gz"],
     )
 
 def _maybe(repo_rule, name, **kwargs):

@@ -1,4 +1,5 @@
-load("@bazel_skylib//:lib.bzl", "paths", "shell")
+load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _goimports_impl(ctx):
     # That way we don't depend on defaults encoded in the binary but always

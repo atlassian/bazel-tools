@@ -1,4 +1,4 @@
-load("@bazel_skylib//:lib.bzl", "shell")
+load("@bazel_skylib//lib:shell.bzl", "shell")
 
 _CONTENT_PREFIX = """#!/usr/bin/env bash
 

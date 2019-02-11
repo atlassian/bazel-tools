@@ -4,30 +4,32 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "f87fa87475ea107b3c69196f39c82b7bbf58fe27c62a338684c20ca17d1d8613",
-    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.16.2/rules_go-0.16.2.tar.gz"],
+    sha256 = "12b89992cd76a864cd1d862077e475149898e69fad18c843cb3c90328c8879f7",
+    strip_prefix = "rules_go-d023cdf5d7ba59e8ba61a214ff8277556ab5066f",
+    urls = ["https://github.com/bazelbuild/rules_go/archive/d023cdf5d7ba59e8ba61a214ff8277556ab5066f.tar.gz"],
 )
 
 http_archive(
     name = "bazel_gazelle",
-    sha256 = "6e875ab4b6bf64a38c352887760f21203ab054676d9c1b274963907e0768740d",
-    urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.15.0/bazel-gazelle-0.15.0.tar.gz"],
+    sha256 = "7949fc6cc17b5b191103e97481cf8889217263acf52e00b560683413af204fcb",
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.16.0/bazel-gazelle-0.16.0.tar.gz"],
 )
 
 http_archive(
     name = "com_github_bazelbuild_buildtools",
-    sha256 = "953ed402234e54874a2a4020b011fd8d5e6e575883fe2c11fb112819c19edb28",
-    strip_prefix = "buildtools-d39e4d5c25111527369142f16cdb49aa67707313",
-    urls = ["https://github.com/bazelbuild/buildtools/archive/d39e4d5c25111527369142f16cdb49aa67707313.tar.gz"],
+    sha256 = "896f18860254d9a165ad65550666806cbf58dbb0fb71b1821df132c20db42b44",
+    strip_prefix = "buildtools-aa1408f15df9f4c9e713dd5949fedfb04865199a",
+    urls = ["https://github.com/bazelbuild/buildtools/archive/aa1408f15df9f4c9e713dd5949fedfb04865199a.tar.gz"],
 )
 
-load("@io_bazel_rules_go//go:def.bzl", "go_register_toolchains", "go_rules_dependencies")
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
 go_rules_dependencies()
 
 go_register_toolchains()
+
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
 
 gazelle_dependencies()
 

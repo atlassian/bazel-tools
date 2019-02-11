@@ -4,29 +4,28 @@ def buildozer_dependencies():
     _maybe(
         http_archive,
         name = "bazel_skylib",
-        sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
-        strip_prefix = "bazel-skylib-0.5.0",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz"],
+        sha256 = "2c62d8cd4ab1e65c08647eb4afe38f51591f43f7f0885e7769832fa137633dcb",
+        strip_prefix = "bazel-skylib-0.7.0",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.7.0.tar.gz"],
     )
 
     # used for build.proto for buildozer :tableflip: https://github.com/bazelbuild/buildtools/issues/143
     _maybe(
         http_archive,
         name = "io_bazel",
-        sha256 = "66135f877d0cc075b683474c50b1f7c3e2749bf0a40e446f20392f44494fefff",
-        strip_prefix = "bazel-0.12.0",
+        sha256 = "6ccb831e683179e0cfb351cb11ea297b4db48f9eab987601c038aa0f83037db4",
         urls = [
-            "http://mirror.bazel.build/github.com/bazelbuild/bazel/archive/0.12.0.tar.gz",
-            "https://github.com/bazelbuild/bazel/archive/0.12.0.tar.gz",
+            "https://releases.bazel.build/0.21.0/release/bazel-0.21.0-dist.zip",
+            "https://github.com/bazelbuild/bazel/releases/download/0.21.0/bazel-0.21.0-dist.zip",
         ],
     )
 
     _maybe(
         http_archive,
         name = "com_github_bazelbuild_buildtools",
-        sha256 = "953ed402234e54874a2a4020b011fd8d5e6e575883fe2c11fb112819c19edb28",
-        strip_prefix = "buildtools-d39e4d5c25111527369142f16cdb49aa67707313",
-        urls = ["https://github.com/bazelbuild/buildtools/archive/d39e4d5c25111527369142f16cdb49aa67707313.tar.gz"],
+        sha256 = "896f18860254d9a165ad65550666806cbf58dbb0fb71b1821df132c20db42b44",
+        strip_prefix = "buildtools-aa1408f15df9f4c9e713dd5949fedfb04865199a",
+        urls = ["https://github.com/bazelbuild/buildtools/archive/aa1408f15df9f4c9e713dd5949fedfb04865199a.tar.gz"],
     )
 
 def _maybe(repo_rule, name, **kwargs):

@@ -76,16 +76,16 @@ def go_revive_dependencies():
     _maybe(
         go_repository,
         name = "org_golang_x_tools",
-        commit = "677d2ff680c1",
+        commit = "bf090417da8b6150dcfe96795325f5aa78fff718",
         importpath = "golang.org/x/tools",
     )
 
     _maybe(
         http_archive,
         name = "bazel_skylib",
-        sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
-        strip_prefix = "bazel-skylib-0.5.0",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz"],
+        sha256 = "2c62d8cd4ab1e65c08647eb4afe38f51591f43f7f0885e7769832fa137633dcb",
+        strip_prefix = "bazel-skylib-0.7.0",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.7.0.tar.gz"],
     )
 
     _maybe(

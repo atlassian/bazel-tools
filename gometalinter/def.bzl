@@ -1,4 +1,5 @@
-load("@bazel_skylib//:lib.bzl", "paths", "shell")
+load("@bazel_skylib//lib:shell.bzl", "shell")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@io_bazel_rules_go//go:def.bzl", "GoSDK")
 
 def _gometalinter_impl(ctx):
