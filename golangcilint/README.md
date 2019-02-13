@@ -18,7 +18,6 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.12.1/rules_go-0.12.1.tar.gz"],
 )
 
-
 http_archive(
     name = "com_github_atlassian_bazel_tools",
     strip_prefix = "bazel-tools-<commit hash>",
@@ -29,9 +28,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_register_toolchains", "go_rules_depen
 load("@com_github_atlassian_bazel_tools//golangcilint:deps.bzl", "golangcilint_dependencies")
 
 go_rules_dependencies()
-
 go_register_toolchains()
-
 golangcilint_dependencies()
 ```
 
@@ -47,7 +44,7 @@ golangcilint(
         "cmd/...",
         "pkg/...",
     ],
-    prefix = "github.com/<my>/<project>",
+    prefix = "bitbucket.org/<my>/<project>",
 )
 ```
 Invoke with

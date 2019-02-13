@@ -1,6 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-
 _DOWNLOAD_URI = (
     "https://github.com/golangci/golangci-lint/releases/download/v{version}/" +
     "golangci-lint-{version}-{arch}.tar.gz"
@@ -30,8 +29,9 @@ def _golangcilint_download_impl(ctx):
     if arch not in _CHECKSUMS:
         fail("Unsupported arch {}".format(arch))
 
-    url = DOWNLOAD_URI.format(version=_VERSION, arch=arch)
+    url = _DOWNLOAD_URI.format(version=_VERSION, arch=arch)
     prefix = _PREFIX.format(version=_VERSION, arch=arch)
+    sha256 = _CHECKSUMS[arch]
 
     ctx.template(
         "BUILD.bazel",
