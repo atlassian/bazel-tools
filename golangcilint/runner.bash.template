@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GOLANGCILINT_SHORT_PATH=@@GOLANGCILINT_SHORT_PATH@@
+ARGS=@@ARGS@@
+PREFIX_DIR_PATH=@@PREFIX_DIR_PATH@@
+PREFIX_BASE_NAME=@@PREFIX_BASE_NAME@@
+NEW_GOROOT=@@NEW_GOROOT@@
+
+mkdir -p "src/${PREFIX_DIR_PATH}"
+ln -snf\
+    "${BUILD_WORKSPACE_DIRECTORY}"\
+    "src/${PREFIX_DIR_PATH}/${PREFIX_BASE_NAME}"
+
+DIRECTORY="$(pwd -P)"
+NEW_GOPATH="${DIRECTORY}"
+NEW_GOROOT="${DIRECTORY}/${NEW_GOROOT}"
+NEW_PATH="${NEW_GOPATH}/external/com_github_atlassian_bazel_tools_golangcilint:${NEW_GOROOT}/bin:${PATH}"
+
+golangcilint_short_path=$(readlink "${GOLANGCILINT_SHORT_PATH}")
+CURDIR="${NEW_GOPATH}/src/${PREFIX_DIR_PATH}/${PREFIX_BASE_NAME}"
+cd "${CURDIR}"
+
+/usr/bin/env \
+    -i \
+    GOPATH="${NEW_GOPATH}"\
+    GOROOT="${NEW_GOROOT}"\
+    GOCACHE="$(mktemp -d)"\
+    PATH="${NEW_PATH}"\
+    PWD="${CURDIR}"\
+    "${golangcilint_short_path}"\
+    run "${ARGS[@]}" $@
