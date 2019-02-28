@@ -45,7 +45,7 @@ _multirun = rule(
             mandatory = True,
             allow_files = True,
             doc = "Targets to run in specified order",
-            cfg = "host",
+            cfg = "target",
         ),
     },
     executable = True,
@@ -72,11 +72,17 @@ def _command_impl(ctx):
         "%s=%s" % (k, shell.quote(v))
         for k, v in ctx.attr.environment.items()
     ]
+    str_unqouted_env = [
+        "%s=%s" % (k, v)
+        for k, v in ctx.attr.raw_environment.items()
+    ]
     str_args = [
         "%s=%s" % (k, shell.quote(v))
         for k, v in ctx.attr.arguments.items()
     ]
-    command_elements = str_env + \
+    command_elements = ["exec env"] + \
+                       str_env + \
+                       str_unqouted_env + \
                        ["./%s" % shell.quote(defaultInfo.files_to_run.executable.short_path)] + \
                        str_args + \
                        ["$@\n"]
@@ -106,12 +112,15 @@ _command = rule(
         "environment": attr.string_dict(
             doc = "Dictionary of environment variables",
         ),
+        "raw_environment": attr.string_dict(
+            doc = "Dictionary of unqouted environment variables",
+        ),
         "command": attr.label(
             mandatory = True,
             allow_files = True,
             executable = True,
             doc = "Target to run",
-            cfg = "host",
+            cfg = "target",
         ),
     },
     executable = True,
