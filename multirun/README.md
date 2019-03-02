@@ -32,6 +32,9 @@ command(
     environment = {
         "ABC": "DEF",
     },
+    raw_environment = {
+        "PATH": "$(pwd)/path",
+    },
 )
 
 multirun(
