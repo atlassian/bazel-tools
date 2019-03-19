@@ -8,7 +8,7 @@ def _goimports_impl(ctx):
         "-d=" + str(ctx.attr.display_diffs).lower(),
         "-e=" + str(ctx.attr.report_all_errors).lower(),
         "-l=" + str(ctx.attr.list).lower(),
-        "-local=" + shell.quote(",".join(ctx.attr.local)),
+        "-local=" + ",".join(ctx.attr.local),
         "-v=" + str(ctx.attr.verbose).lower(),
         "-w=" + str(ctx.attr.write).lower(),
     ]
