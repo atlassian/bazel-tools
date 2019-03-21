@@ -7,7 +7,7 @@ set -euo pipefail
 """
 
 def _multirun_impl(ctx):
-    transitive_depsets = []
+    runfiles = ctx.runfiles()
     content = [_CONTENT_PREFIX]
 
     for command in ctx.attr.commands:
@@ -20,7 +20,7 @@ def _multirun_impl(ctx):
 
         default_runfiles = defaultInfo.default_runfiles
         if default_runfiles != None:
-            transitive_depsets.append(default_runfiles.files)
+            runfiles = runfiles.merge(default_runfiles)
         content.append("echo Running %s\n./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
@@ -31,9 +31,7 @@ def _multirun_impl(ctx):
     )
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = ctx.runfiles(
-            transitive_files = depset([], transitive = transitive_depsets),
-        ),
+        runfiles = runfiles,
         executable = out_file,
     )]
 
@@ -61,12 +59,12 @@ def multirun(**kwargs):
     )
 
 def _command_impl(ctx):
-    transitive_depsets = []
+    runfiles = ctx.runfiles()
     defaultInfo = ctx.attr.command[DefaultInfo]
 
     default_runfiles = defaultInfo.default_runfiles
     if default_runfiles != None:
-        transitive_depsets.append(default_runfiles.files)
+        runfiles = runfiles.merge(default_runfiles)
 
     str_env = [
         "%s=%s" % (k, shell.quote(v))
@@ -96,9 +94,7 @@ def _command_impl(ctx):
     return [
         DefaultInfo(
             files = depset([out_file]),
-            runfiles = ctx.runfiles(
-                transitive_files = depset([], transitive = transitive_depsets),
-            ),
+            runfiles = runfiles,
             executable = out_file,
         ),
     ]
