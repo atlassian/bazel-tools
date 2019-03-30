@@ -4,12 +4,12 @@ _GOMETALINTER_TARBALLS = {
     "darwin_amd64": (
         "gometalinter-2.0.10-darwin-amd64.tar.gz",
         "gometalinter-2.0.10-darwin-amd64",
-        "b21c28a236f05d1cd1a394240388afdc3a20a2ddfeb34acb19c651d5d1936523"
+        "b21c28a236f05d1cd1a394240388afdc3a20a2ddfeb34acb19c651d5d1936523",
     ),
     "linux_amd64": (
         "gometalinter-2.0.10-linux-amd64.tar.gz",
         "gometalinter-2.0.10-linux-amd64",
-        "111f656a8599349168544b9ae0dbc93240edcb28a81a92e9810ceaa40575545a"
+        "111f656a8599349168544b9ae0dbc93240edcb28a81a92e9810ceaa40575545a",
     ),
 }
 

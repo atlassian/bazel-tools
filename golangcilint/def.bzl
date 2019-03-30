@@ -27,6 +27,8 @@ def _golangcilint_impl(ctx):
     transitive_depsets = [
         depset(sdk.srcs),
         depset(sdk.tools),
+        depset(sdk.libs),
+        depset([sdk.go]),
     ]
     default_runfiles = ctx.attr._golangcilint[DefaultInfo].default_runfiles
     if default_runfiles != None:

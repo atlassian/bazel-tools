@@ -10,12 +10,12 @@ _PREFIX = (
 
 _VERSION = "1.14.0"
 _CHECKSUMS = {
-     "windows-386":     "d819336b57a61c2676fb99352fead8aa567b454202e22670eec5833b04eb3a78",
-     "windows-amd64":   "e79cbe016591832b85ce66f29c8180ebd8a45dcb793a44c9d3ff101bd7f3fe76",
-     "darwin-386":      "af352896aa6fa9d830a2b1f2fa0f5655d66372138ce5975c44fca4e4bdd85de1",
-     "linux-amd64":     "4b7495539c84ecfb4256f1e7c8bcc9aea6732aef7360fd43ff239cea05d566c1",
-     "linux-386":       "af93eb9d4722830940e74e6c018154c8182b31dd3ab5599fc7a3cdcdd472b37e",
-     "darwin-amd64":    "9906ff1eb2cc01e53ba31f44a937300633b1f52ad227d9e206506c6c1b083a29",
+    "windows-386": "d819336b57a61c2676fb99352fead8aa567b454202e22670eec5833b04eb3a78",
+    "windows-amd64": "e79cbe016591832b85ce66f29c8180ebd8a45dcb793a44c9d3ff101bd7f3fe76",
+    "darwin-386": "af352896aa6fa9d830a2b1f2fa0f5655d66372138ce5975c44fca4e4bdd85de1",
+    "linux-amd64": "4b7495539c84ecfb4256f1e7c8bcc9aea6732aef7360fd43ff239cea05d566c1",
+    "linux-386": "af93eb9d4722830940e74e6c018154c8182b31dd3ab5599fc7a3cdcdd472b37e",
+    "darwin-amd64": "9906ff1eb2cc01e53ba31f44a937300633b1f52ad227d9e206506c6c1b083a29",
 }
 
 def _golangcilint_download_impl(ctx):
@@ -29,8 +29,8 @@ def _golangcilint_download_impl(ctx):
     if arch not in _CHECKSUMS:
         fail("Unsupported arch {}".format(arch))
 
-    url = _DOWNLOAD_URI.format(version=_VERSION, arch=arch)
-    prefix = _PREFIX.format(version=_VERSION, arch=arch)
+    url = _DOWNLOAD_URI.format(version = _VERSION, arch = arch)
+    prefix = _PREFIX.format(version = _VERSION, arch = arch)
     sha256 = _CHECKSUMS[arch]
 
     ctx.template(
