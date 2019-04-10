@@ -2,8 +2,6 @@ load("@bazel_skylib//lib:shell.bzl", "shell")
 
 _CONTENT_PREFIX = """#!/usr/bin/env bash
 
-set -euo pipefail
-
 # --- begin runfiles.bash initialization ---
 # Copy-pasted from Bazel's Bash runfiles library (tools/bash/runfiles/runfiles.bash).
 set -euo pipefail
