@@ -4,10 +4,36 @@ _CONTENT_PREFIX = """#!/usr/bin/env bash
 
 set -euo pipefail
 
+# --- begin runfiles.bash initialization ---
+# Copy-pasted from Bazel's Bash runfiles library (tools/bash/runfiles/runfiles.bash).
+set -euo pipefail
+if [[ ! -d "${RUNFILES_DIR:-/dev/null}" && ! -f "${RUNFILES_MANIFEST_FILE:-/dev/null}" ]]; then
+  if [[ -f "$0.runfiles_manifest" ]]; then
+    export RUNFILES_MANIFEST_FILE="$0.runfiles_manifest"
+  elif [[ -f "$0.runfiles/MANIFEST" ]]; then
+    export RUNFILES_MANIFEST_FILE="$0.runfiles/MANIFEST"
+  elif [[ -f "$0.runfiles/bazel_tools/tools/bash/runfiles/runfiles.bash" ]]; then
+    export RUNFILES_DIR="$0.runfiles"
+  fi
+fi
+if [[ -f "${RUNFILES_DIR:-/dev/null}/bazel_tools/tools/bash/runfiles/runfiles.bash" ]]; then
+  source "${RUNFILES_DIR}/bazel_tools/tools/bash/runfiles/runfiles.bash"
+elif [[ -f "${RUNFILES_MANIFEST_FILE:-/dev/null}" ]]; then
+  source "$(grep -m1 "^bazel_tools/tools/bash/runfiles/runfiles.bash " \
+            "$RUNFILES_MANIFEST_FILE" | cut -d ' ' -f 2-)"
+else
+  echo >&2 "ERROR: cannot find @bazel_tools//tools/bash/runfiles:runfiles.bash"
+  exit 1
+fi
+# --- end runfiles.bash initialization ---
+
+# Export RUNFILES_* envvars (and a couple more) for subprocesses.
+runfiles_export_envvars
+
 """
 
 def _multirun_impl(ctx):
-    runfiles = ctx.runfiles()
+    runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
     content = [_CONTENT_PREFIX]
 
     for command in ctx.attr.commands:
@@ -45,6 +71,9 @@ _multirun = rule(
             doc = "Targets to run in specified order",
             cfg = "target",
         ),
+        "_bash_runfiles": attr.label(
+            default = Label("@bazel_tools//tools/bash/runfiles"),
+        ),
     },
     executable = True,
 )
@@ -59,7 +88,8 @@ def multirun(**kwargs):
     )
 
 def _command_impl(ctx):
-    runfiles = ctx.runfiles()
+    runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
+
     defaultInfo = ctx.attr.command[DefaultInfo]
 
     default_runfiles = defaultInfo.default_runfiles
@@ -117,6 +147,9 @@ _command = rule(
             executable = True,
             doc = "Target to run",
             cfg = "target",
+        ),
+        "_bash_runfiles": attr.label(
+            default = Label("@bazel_tools//tools/bash/runfiles"),
         ),
     },
     executable = True,
