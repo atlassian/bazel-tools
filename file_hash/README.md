@@ -1,4 +1,4 @@
-# hash
+# file_hash
 
 Bazel rule for hashing. Supports MD5, SHA1, SHA256, SHA512.
 
