@@ -59,7 +59,7 @@ func (a arguments) run() error {
 		}
 		err := hashFile(file, h)
 		if err != nil {
-			return fmt.Errorf("failed to hash file %s", file)
+			return fmt.Errorf("failed to hash file %s: %v", file, err)
 		}
 	}
 
@@ -70,7 +70,7 @@ func (a arguments) run() error {
 
 	err := ioutil.WriteFile(a.outputFile, result, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to save result in %s", a.outputFile)
+		return fmt.Errorf("failed to save result in %s: %v", a.outputFile, err)
 	}
 	return nil
 }
