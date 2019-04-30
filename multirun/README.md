@@ -26,9 +26,11 @@ load("@com_github_atlassian_bazel_tools//:multirun/def.bzl", "multirun", "comman
 command(
     name = "command1",
     command = "//some/label",
-    arguments = {
-        "-arg1": "value1",
-    },
+    arguments = [
+        "-arg1",
+        "value1",
+        "-arg2",
+    ],
     environment = {
         "ABC": "DEF",
     },

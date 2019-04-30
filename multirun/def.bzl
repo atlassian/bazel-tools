@@ -103,8 +103,8 @@ def _command_impl(ctx):
         for k, v in ctx.attr.raw_environment.items()
     ]
     str_args = [
-        "%s=%s" % (k, shell.quote(v))
-        for k, v in ctx.attr.arguments.items()
+        "%s" % shell.quote(v)
+        for v in ctx.attr.arguments
     ]
     command_elements = ["exec env"] + \
                        str_env + \
@@ -130,8 +130,8 @@ def _command_impl(ctx):
 _command = rule(
     implementation = _command_impl,
     attrs = {
-        "arguments": attr.string_dict(
-            doc = "Dictionary of command line arguments",
+        "arguments": attr.string_list(
+            doc = "List of command line arguments",
         ),
         "environment": attr.string_dict(
             doc = "Dictionary of environment variables",
