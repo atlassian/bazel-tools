@@ -1,0 +1,91 @@
+load("@com_github_atlassian_bazel_tools//:multirun/def.bzl", "command", "multirun")
+
+sh_test(
+    name = "test_multirun_success",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :multirun_success)",
+        "0",
+        "$(location expected_success.txt)",
+    ],
+    data = [
+        "expected_success.txt",
+        ":multirun_success",
+    ],
+)
+
+sh_test(
+    name = "test_multirun_failure",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :multirun_failure)",
+        "5",
+        "$(location expected_failure.txt)",
+    ],
+    data = [
+        "expected_failure.txt",
+        ":multirun_failure",
+    ],
+)
+
+sh_binary(
+    name = "exit",
+    srcs = ["exit.sh"],
+)
+
+sh_binary(
+    name = "echo",
+    srcs = ["echo.sh"],
+)
+
+multirun(
+    name = "multirun_success",
+    commands = [
+        ":command_echo_1",
+        ":command_echo_2",
+    ],
+)
+
+command(
+    name = "command_echo_1",
+    arguments = [
+        "command_1 a",
+        "command_1 b",
+    ],
+    command = ":echo",
+)
+
+command(
+    name = "command_echo_2",
+    arguments = [
+        "command_2 a",
+        "command_2 b",
+        "command_2 c",
+    ],
+    command = ":echo",
+)
+
+command(
+    name = "command_echo_3",
+    arguments = [
+        "command_3 a",
+    ],
+    command = ":echo",
+)
+
+multirun(
+    name = "multirun_failure",
+    commands = [
+        ":command_echo_2",
+        ":command_exit",
+        ":command_echo_3",
+    ],
+)
+
+command(
+    name = "command_exit",
+    arguments = [
+        "5",
+    ],
+    command = ":exit",
+)
