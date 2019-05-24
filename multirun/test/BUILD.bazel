@@ -28,6 +28,38 @@ sh_test(
     ],
 )
 
+sh_test(
+    name = "test_multirun_parallel_success",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        # Sort the output for deterministic comparison; order doesn't matter as long as all the expected lines are
+        # there.
+        "'$(location :multirun_parallel_success) | sort'",
+        "0",
+        "$(location expected_parallel_success.txt)",
+    ],
+    data = [
+        "expected_parallel_success.txt",
+        ":multirun_parallel_success",
+    ],
+)
+
+sh_test(
+    name = "test_multirun_parallel_failure",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        # Sort the output for deterministic comparison; order doesn't matter as long as all the expected lines are
+        # there.
+        "'$(location :multirun_parallel_failure) | sort'",
+        "5",
+        "$(location expected_parallel_failure.txt)",
+    ],
+    data = [
+        "expected_parallel_failure.txt",
+        ":multirun_parallel_failure",
+    ],
+)
+
 sh_binary(
     name = "exit",
     srcs = ["exit.sh"],
@@ -44,6 +76,15 @@ multirun(
         ":command_echo_1",
         ":command_echo_2",
     ],
+)
+
+multirun(
+    name = "multirun_parallel_success",
+    commands = [
+        ":command_echo_2",
+        ":command_echo_1",
+    ],
+    parallel = True,
 )
 
 command(
@@ -80,6 +121,16 @@ multirun(
         ":command_exit",
         ":command_echo_3",
     ],
+)
+
+multirun(
+    name = "multirun_parallel_failure",
+    commands = [
+        ":command_echo_2",
+        ":command_exit",
+        ":command_echo_3",
+    ],
+    parallel = True,
 )
 
 command(

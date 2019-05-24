@@ -3,7 +3,11 @@
 # Test harness.  Runs the command `$1`, checking that it exits with code `$2` and its stdout output matches the content
 # of `$3`.  Exits 0 if all is matching, non-0 otherwise.
 
-ACTUAL_STDOUT=$($1)
+set -o pipefail
+
+# Use `eval` instead of just `$($1)` to allow the command to include
+# pipelines.
+ACTUAL_STDOUT=$(eval "$1")
 ACTUAL_CODE=$?
 EXPECTED_CODE=$2
 EXPECTED_STDOUT=$(cat "$3")
