@@ -1,0 +1,7 @@
+Running //multirun/test:command_echo_1
+command_1 a
+command_1 b
+Running //multirun/test:command_echo_2
+command_2 a
+command_2 b
+command_2 c

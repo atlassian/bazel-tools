@@ -30,9 +30,33 @@ runfiles_export_envvars
 
 """
 
+_PARALLEL_PREFIX = """
+_pids=()
+# Executes command with args in $2...$N, prepending "[$1] " to each line of stdout, in the background.
+_parallel() {
+    tag=$1
+    shift
+    $@ | while read -r
+    do
+        echo "[$tag] $REPLY"
+    done &
+    _pids+=($!)
+}
+"""
+
+_PARALLEL_SUFFIX = """
+for pid in "${_pids[@]}"
+do
+    wait $pid
+done
+"""
+
 def _multirun_impl(ctx):
     runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
     content = [_CONTENT_PREFIX]
+
+    if ctx.attr.parallel:
+        content.append(_PARALLEL_PREFIX)
 
     for command in ctx.attr.commands:
         defaultInfo = command[DefaultInfo]
@@ -45,7 +69,13 @@ def _multirun_impl(ctx):
         default_runfiles = defaultInfo.default_runfiles
         if default_runfiles != None:
             runfiles = runfiles.merge(default_runfiles)
-        content.append("echo Running %s\n./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+        if ctx.attr.parallel:
+            content.append("_parallel %s ./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+        else:
+            content.append("echo Running %s\n./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+
+    if ctx.attr.parallel:
+        content.append(_PARALLEL_SUFFIX)
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(
@@ -69,6 +99,7 @@ _multirun = rule(
             doc = "Targets to run in specified order",
             cfg = "target",
         ),
+        "parallel": attr.bool(default=False, doc="If true, targets will be run in parallel, not in the specified order"),
         "_bash_runfiles": attr.label(
             default = Label("@bazel_tools//tools/bash/runfiles"),
         ),

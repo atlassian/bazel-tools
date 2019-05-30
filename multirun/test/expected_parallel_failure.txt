@@ -1,0 +1,5 @@
+[//multirun/test:command_echo_2] command_2 a
+[//multirun/test:command_echo_2] command_2 b
+[//multirun/test:command_echo_2] command_2 c
+[//multirun/test:command_echo_3] command_3 a
+[//multirun/test:command_exit] exiting 5
