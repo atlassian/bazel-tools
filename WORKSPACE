@@ -34,3 +34,7 @@ load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_depen
 gazelle_dependencies()
 
 buildifier_dependencies()
+
+load("//gotemplate:deps.bzl", "gotemplate_dependencies")
+
+gotemplate_dependencies()
