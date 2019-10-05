@@ -27,6 +27,7 @@ cd "${CURDIR}"
     GOPATH="${NEW_GOPATH}"\
     GOROOT="${NEW_GOROOT}"\
     GOCACHE="$(mktemp -d)"\
+    GOLANGCI_LINT_CACHE="$(mktemp -d)"\
     PATH="${NEW_PATH}"\
     PWD="${CURDIR}"\
     "${golangcilint_short_path}"\

@@ -99,7 +99,7 @@ _multirun = rule(
             doc = "Targets to run in specified order",
             cfg = "target",
         ),
-        "parallel": attr.bool(default=False, doc="If true, targets will be run in parallel, not in the specified order"),
+        "parallel": attr.bool(default = False, doc = "If true, targets will be run in parallel, not in the specified order"),
         "_bash_runfiles": attr.label(
             default = Label("@bazel_tools//tools/bash/runfiles"),
         ),

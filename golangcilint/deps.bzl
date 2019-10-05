@@ -8,14 +8,14 @@ _PREFIX = (
     "golangci-lint-{version}-{arch}"
 )
 
-_VERSION = "1.14.0"
+_VERSION = "1.19.1"
 _CHECKSUMS = {
-    "windows-386": "d819336b57a61c2676fb99352fead8aa567b454202e22670eec5833b04eb3a78",
-    "windows-amd64": "e79cbe016591832b85ce66f29c8180ebd8a45dcb793a44c9d3ff101bd7f3fe76",
-    "darwin-386": "af352896aa6fa9d830a2b1f2fa0f5655d66372138ce5975c44fca4e4bdd85de1",
-    "linux-amd64": "4b7495539c84ecfb4256f1e7c8bcc9aea6732aef7360fd43ff239cea05d566c1",
-    "linux-386": "af93eb9d4722830940e74e6c018154c8182b31dd3ab5599fc7a3cdcdd472b37e",
-    "darwin-amd64": "9906ff1eb2cc01e53ba31f44a937300633b1f52ad227d9e206506c6c1b083a29",
+    "windows-386": "5f9269cf8211ee2dc1824a35749662100f2c61548c281dae47ca575e93d2fc76",
+    "windows-amd64": "9adb30ca0d25e0d0816291095c3fa7788bc8a16f343f9ee7a91e5cfc089e4adf",
+    "darwin-386": "f0534be9cde3f7fda16a18d2d77d3b62f58c3eddfebdf9e4159ab6cb96e5ba5d",
+    "linux-amd64": "03ca6a77734720581b11a78e5fd4ce6d6bfd8f36768b214bb9890980b6db261f",
+    "linux-386": "963c6c7f2332234b568fbd2db1acdfae1fa781ff53a11c392141374433e713bd",
+    "darwin-amd64": "b6e0719a6e2d2e8aefe67ab33e67d7be81790fec41da6412e152cd77f37cf955",
 }
 
 def _golangcilint_download_impl(ctx):
@@ -52,9 +52,9 @@ def golangcilint_dependencies():
     _maybe(
         http_archive,
         name = "bazel_skylib",
-        sha256 = "2c62d8cd4ab1e65c08647eb4afe38f51591f43f7f0885e7769832fa137633dcb",
-        strip_prefix = "bazel-skylib-0.7.0",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.7.0.tar.gz"],
+        sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
+        strip_prefix = "bazel-skylib-0.8.0",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.8.0.tar.gz"],
     )
     _golangcilint_download(
         name = "com_github_atlassian_bazel_tools_golangcilint",

@@ -8,6 +8,16 @@ Bazel rule for [`rjsone`](https://github.com/wryun/rjsone).
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# rjsone is written in Go and hence needs rules_go and gazelle to be built.
+# See https://github.com/bazelbuild/bazel-gazelle for the up to date setup instructions.
+http_archive(
+    name = "io_bazel_rules_go",
+)
+
+http_archive(
+    name = "bazel_gazelle",
+)
+
 http_archive(
     name = "com_github_atlassian_bazel_tools",
     strip_prefix = "bazel-tools-<commit hash>",
