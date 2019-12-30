@@ -4,6 +4,10 @@ Various reusable bits for the [Bazel build system](https://bazel.build/).
 
 See subdirectories for documentation.
 
+## CI
+
+Our builds are part of the [Bazel ecosystem builds on BuildKite](https://buildkite.com/bazel/atlassian-bazel-tools).
+
 ## Contributing
 
 Pull requests, issues and comments welcome. For pull requests:
