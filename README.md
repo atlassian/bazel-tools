@@ -6,7 +6,7 @@ See subdirectories for documentation.
 
 ## CI
 
-Our builds are part of the [Bazel ecosystem builds on BuildKite](https://buildkite.com/bazel/atlassian-bazel-tools).
+Our builds are part of the [Bazel ecosystem builds on Buildkite](https://buildkite.com/bazel/atlassian-bazel-tools).
 
 ## Contributing
 
