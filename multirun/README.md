@@ -1,6 +1,6 @@
 # multirun
 
-Bazel rule to `bazel run` multiple executable targets sequentially.
+Bazel rule to `bazel run` multiple executable targets sequentially or in parallel.
 
 ## Setup and usage via Bazel
 
@@ -45,6 +45,15 @@ multirun(
         ":command1",
         "//some/other:label",
     ],
+)
+
+multirun(
+    name = "run_all_parallel",
+    commands = [
+        ":command1",
+        "//some/other:label",
+    ],
+    parallel = True,
 )
 ```
 Invoke with
