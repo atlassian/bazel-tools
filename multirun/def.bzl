@@ -138,13 +138,11 @@ def _command_impl(ctx):
         content = _CONTENT_PREFIX + " ".join(command_elements),
         is_executable = True,
     )
-    return [
-        DefaultInfo(
-            files = depset([out_file]),
-            runfiles = runfiles,
-            executable = out_file,
-        ),
-    ]
+    return [DefaultInfo(
+        files = depset([out_file]),
+        runfiles = runfiles,
+        executable = out_file,
+    )]
 
 _command = rule(
     implementation = _command_impl,

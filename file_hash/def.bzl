@@ -22,9 +22,9 @@ def _file_hash_impl(ctx):
         mnemonic = "Hash",
         progress_message = "Hashing files",
     )
-    return DefaultInfo(
+    return [DefaultInfo(
         files = depset([out_file]),
-    )
+    )]
 
 file_hash = rule(
     implementation = _file_hash_impl,

@@ -41,9 +41,9 @@ def _gotemplate_impl(ctx):
         mnemonic = "GoTemplate",
         progress_message = "Assembling %s" % out_file.short_path,
     )
-    return DefaultInfo(
+    return [DefaultInfo(
         files = depset([out_file]),
-    )
+    )]
 
 def _gotemplate_exec_impl(ctx):
     out_file = ctx.actions.declare_file(ctx.label.name)
@@ -69,10 +69,10 @@ def _gotemplate_exec_impl(ctx):
         mnemonic = "GoTemplate",
         progress_message = "Assembling %s" % out_file.short_path,
     )
-    return DefaultInfo(
+    return [DefaultInfo(
         files = depset([out_file]),
         executable = out_file,
-    )
+    )]
 
 _attributes = {
     "yaml_contexts": attr.label_keyed_string_dict(
