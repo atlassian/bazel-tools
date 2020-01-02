@@ -15,4 +15,4 @@ GOPATH=$(pwd -P)
 goimports_short_path=$(readlink "$GOIMPORTS_SHORT_PATH")
 CURDIR="$GOPATH/src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
 cd "$CURDIR"
-/usr/bin/env -i GOPATH="$GOPATH" PATH="$PATH" PWD="$CURDIR" "$goimports_short_path" "${ARGS[@]}" $(find . -type f -name  '*.go' -not -path './bazel-*' @@EXCLUDE_PATHS@@ @@EXCLUDE_FILES@@) $@
+/usr/bin/env -i GOPATH="$GOPATH" PATH="$PATH" PWD="$CURDIR" "$goimports_short_path" "${ARGS[@]}" $(find . -type f -name  '*.go' -not -path './bazel-*' @@EXCLUDE_PATHS@@ @@EXCLUDE_FILES@@) "$@"

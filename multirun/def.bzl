@@ -24,7 +24,7 @@ _pids=()
 _parallel() {
     tag=$1
     shift
-    $@ | while read -r
+    "$@" | while read -r
     do
         echo "[$tag] $REPLY"
     done &
@@ -58,9 +58,9 @@ def _multirun_impl(ctx):
         if default_runfiles != None:
             runfiles = runfiles.merge(default_runfiles)
         if ctx.attr.parallel:
-            content.append("_parallel %s ./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+            content.append('_parallel %s ./%s "$@"\n' % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
         else:
-            content.append("echo Running %s\n./%s $@\n" % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+            content.append('echo Running %s\n./%s "$@"\n' % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
 
     if ctx.attr.parallel:
         content.append(_PARALLEL_SUFFIX)
@@ -130,7 +130,7 @@ def _command_impl(ctx):
                        str_unqouted_env + \
                        ["./%s" % shell.quote(defaultInfo.files_to_run.executable.short_path)] + \
                        str_args + \
-                       ["$@\n"]
+                       ['"$@"\n']
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(

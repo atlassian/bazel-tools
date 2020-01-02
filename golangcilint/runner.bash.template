@@ -31,4 +31,4 @@ cd "${CURDIR}"
     PATH="${NEW_PATH}"\
     PWD="${CURDIR}"\
     "${golangcilint_short_path}"\
-    run "${ARGS[@]}" $@
+    run "${ARGS[@]}" "$@"
