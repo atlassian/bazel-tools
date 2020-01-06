@@ -1,0 +1,5 @@
+RAK>>running multirun/test/multirun_parallel_signal_handling.bash
+RAK>>sleeping 2
+[//multirun/test:command_sleep_and_exit] sleeping before exiting 4
+RAK>>killing with signal SIGTERM
+RAK>>done

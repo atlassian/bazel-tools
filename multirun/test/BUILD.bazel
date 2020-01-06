@@ -1,4 +1,4 @@
-load("@com_github_atlassian_bazel_tools//:multirun/def.bzl", "command", "multirun")
+load("@com_github_atlassian_bazel_tools//multirun:def.bzl", "command", "multirun")
 
 sh_test(
     name = "test_multirun_success",
@@ -139,4 +139,97 @@ command(
         "5",
     ],
     command = ":exit",
+)
+
+sh_test(
+    name = "test_multirun_parallel_sigterm",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "'$(location :run_and_kill) $(location :multirun_parallel_signal_handling) 2 SIGTERM'",
+        "255",
+        "$(location expected_parallel_sigterm.txt)",
+    ],
+    data = [
+        "expected_parallel_sigterm.txt",
+        ":multirun_parallel_signal_handling",
+        ":run_and_kill",
+    ],
+)
+
+sh_test(
+    name = "test_multirun_parallel_sigint",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "'$(location :run_and_kill) $(location :multirun_parallel_signal_handling) 2 SIGINT'",
+        "255",
+        "$(location expected_parallel_sigint.txt)",
+    ],
+    data = [
+        "expected_parallel_sigint.txt",
+        ":multirun_parallel_signal_handling",
+        ":run_and_kill",
+    ],
+)
+
+sh_test(
+    name = "test_multirun_sigterm",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "'$(location :run_and_kill) $(location :multirun_signal_handling) 2 SIGTERM'",
+        "255",
+        "$(location expected_sigterm.txt)",
+    ],
+    data = [
+        "expected_sigterm.txt",
+        ":multirun_signal_handling",
+        ":run_and_kill",
+    ],
+)
+
+sh_test(
+    name = "test_multirun_sigint",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "'$(location :run_and_kill) $(location :multirun_signal_handling) 2 SIGINT'",
+        "255",
+        "$(location expected_sigint.txt)",
+    ],
+    data = [
+        "expected_sigint.txt",
+        ":multirun_signal_handling",
+        ":run_and_kill",
+    ],
+)
+
+sh_binary(
+    name = "run_and_kill",
+    srcs = ["run_and_kill.sh"],
+)
+
+sh_binary(
+    name = "sleep_and_exit",
+    srcs = ["sleep_and_exit.sh"],
+)
+
+multirun(
+    name = "multirun_signal_handling",
+    commands = [
+        ":command_sleep_and_exit",
+    ],
+)
+
+multirun(
+    name = "multirun_parallel_signal_handling",
+    commands = [
+        ":command_sleep_and_exit",
+    ],
+    parallel = True,
+)
+
+command(
+    name = "command_sleep_and_exit",
+    arguments = [
+        "4",
+    ],
+    command = ":sleep_and_exit",
 )

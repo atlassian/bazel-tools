@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "main.go",
+        "multirun.go",
+        "process.go",
+    ],
+    importpath = "github.com/atlassian/bazel-tools/multirun",
+    visibility = ["//visibility:private"],
+)
+
+go_binary(
+    name = "multirun",
+    embed = [":go_default_library"],
+    msan = "off",
+    pure = "off",
+    race = "off",
+    static = "off",
+    visibility = ["//visibility:public"],
+)

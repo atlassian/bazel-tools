@@ -18,34 +18,14 @@ runfiles_export_envvars
 
 """
 
-_PARALLEL_PREFIX = """
-_pids=()
-# Executes command with args in $2...$N, prepending "[$1] " to each line of stdout, in the background.
-_parallel() {
-    tag=$1
-    shift
-    "$@" | while read -r
-    do
-        echo "[$tag] $REPLY"
-    done &
-    _pids+=($!)
-}
-"""
-
-_PARALLEL_SUFFIX = """
-for pid in "${_pids[@]}"
-do
-    wait $pid
-done
-"""
-
 def _multirun_impl(ctx):
-    runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
-    content = [_CONTENT_PREFIX]
+    instructions_file = ctx.actions.declare_file(ctx.label.name + ".json")
+    runfiles = ctx.runfiles(files = [instructions_file])
+    runfiles = runfiles.merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
+    runnerInfo = ctx.attr._runner[DefaultInfo]
+    runfiles = runfiles.merge(runnerInfo.default_runfiles)
 
-    if ctx.attr.parallel:
-        content.append(_PARALLEL_PREFIX)
-
+    commands = []
     for command in ctx.attr.commands:
         defaultInfo = command[DefaultInfo]
         if defaultInfo.files_to_run == None:
@@ -57,18 +37,24 @@ def _multirun_impl(ctx):
         default_runfiles = defaultInfo.default_runfiles
         if default_runfiles != None:
             runfiles = runfiles.merge(default_runfiles)
-        if ctx.attr.parallel:
-            content.append('_parallel %s ./%s "$@"\n' % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
-        else:
-            content.append('echo Running %s\n./%s "$@"\n' % (shell.quote(str(command.label)), shell.quote(exe.short_path)))
+        commands.append(struct(
+            tag = str(command.label),
+            path = exe.short_path,
+        ))
+    instructions = struct(
+        commands = commands,
+        parallel = ctx.attr.parallel,
+    )
+    ctx.actions.write(
+        output = instructions_file,
+        content = instructions.to_json(),
+    )
 
-    if ctx.attr.parallel:
-        content.append(_PARALLEL_SUFFIX)
-
+    script = 'exec ./%s -f %s "$@"\n' % (shell.quote(runnerInfo.files_to_run.executable.short_path), shell.quote(instructions_file.short_path))
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(
         output = out_file,
-        content = "".join(content),
+        content = _CONTENT_PREFIX + script,
         is_executable = True,
     )
     return [DefaultInfo(
@@ -84,12 +70,17 @@ _multirun = rule(
             allow_empty = True,  # this is explicitly allowed - generated invocations may need to run 0 targets
             mandatory = True,
             allow_files = True,
-            doc = "Targets to run in specified order",
+            doc = "Targets to run",
             cfg = "target",
         ),
         "parallel": attr.bool(default = False, doc = "If true, targets will be run in parallel, not in the specified order"),
         "_bash_runfiles": attr.label(
             default = Label("@bazel_tools//tools/bash/runfiles"),
+        ),
+        "_runner": attr.label(
+            default = Label("@com_github_atlassian_bazel_tools//multirun"),
+            cfg = "host",
+            executable = True,
         ),
     },
     executable = True,
