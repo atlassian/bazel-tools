@@ -33,4 +33,4 @@ those contributing as an individual.
 
 ## License
 
-Copyright (c) 2018-2019 Atlassian and others. Apache 2.0 licensed, see LICENSE file.
+Copyright (c) 2018-2020 Atlassian and others. Apache 2.0 licensed, see LICENSE file.
