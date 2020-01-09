@@ -6,17 +6,17 @@ def goimports_dependencies():
         go_repository,
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sha256 = "11629171a39a1cb4d426760005be6f7cb9b4182e4cb2756b7f1c5c2b6ae869fe",
-        strip_prefix = "tools-bf090417da8b6150dcfe96795325f5aa78fff718",
-        urls = ["https://github.com/golang/tools/archive/bf090417da8b6150dcfe96795325f5aa78fff718.tar.gz"],
+        commit = "6de373a2766cf6891613ba19eb8bb06227ba7273",  # master, as of 2020-01-02
     )
 
     _maybe(
         http_archive,
         name = "bazel_skylib",
-        sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
-        strip_prefix = "bazel-skylib-0.8.0",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/archive/0.8.0.tar.gz"],
+        urls = [
+            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        ],
+        sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
     )
 
 def _maybe(repo_rule, name, **kwargs):

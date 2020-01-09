@@ -17,6 +17,7 @@ You can invoke revive via the Bazel rule.
 `WORKSPACE` file:
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # revive has to be compiled from sources, hence we need rules_go.
 # See https://github.com/bazelbuild/rules_go for the up to date setup instructions.
@@ -30,10 +31,11 @@ http_archive(
     name = "bazel_gazelle",
 )
 
-http_archive(
+git_repository(
     name = "com_github_atlassian_bazel_tools",
-    strip_prefix = "bazel-tools-<commit hash>",
-    urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.zip"],
+    commit = "<commit>",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "<bla>",
 )
 
 # Load go_revive_dependencies Bazel rule.

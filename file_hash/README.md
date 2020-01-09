@@ -8,6 +8,7 @@ Bazel rule for hashing. Supports MD5, SHA1, SHA256, SHA512.
 
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # file_hash is written in Go and hence needs rules_go to be built.
 # See https://github.com/bazelbuild/rules_go for the up to date setup instructions.
@@ -15,10 +16,11 @@ http_archive(
     name = "io_bazel_rules_go",
 )
 
-http_archive(
+git_repository(
     name = "com_github_atlassian_bazel_tools",
-    strip_prefix = "bazel-tools-<commit hash>",
-    urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.tar.gz"],
+    commit = "<commit>",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "<bla>",
 )
 ```
 
