@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def buildozer_dependencies():
     _maybe(
@@ -12,11 +13,11 @@ def buildozer_dependencies():
     )
 
     _maybe(
-        http_archive,
+        git_repository,
         name = "com_github_bazelbuild_buildtools",
-        sha256 = "f3ef44916e6be705ae862c0520bac6834dd2ff1d4ac7e5abc61fe9f12ce7a865",
-        strip_prefix = "buildtools-0.29.0",
-        urls = ["https://github.com/bazelbuild/buildtools/archive/0.29.0.tar.gz"],
+        commit = "5bcc31df55ec1de770cb52887f2e989e7068301f",  #v0.29.0
+        remote = "https://github.com/bazelbuild/buildtools.git",
+        shallow_since = "1568030193 +0200",
     )
 
 def _maybe(repo_rule, name, **kwargs):

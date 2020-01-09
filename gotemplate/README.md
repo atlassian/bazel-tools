@@ -8,6 +8,7 @@ Bazel rule for Go's [`text/template`](https://golang.org/pkg/text/template/) pac
 
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # gotemplate is written in Go and hence needs rules_go and gazelle to be built.
 # See https://github.com/bazelbuild/bazel-gazelle for the up to date setup instructions.
@@ -19,10 +20,11 @@ http_archive(
     name = "bazel_gazelle",
 )
 
-http_archive(
+git_repository(
     name = "com_github_atlassian_bazel_tools",
-    strip_prefix = "bazel-tools-<commit hash>",
-    urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.tar.gz"],
+    commit = "<commit>",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "<bla>",
 )
 
 load("@com_github_atlassian_bazel_tools//gotemplate:deps.bzl", "gotemplate_dependencies")

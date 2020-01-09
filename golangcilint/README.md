@@ -9,6 +9,7 @@ You can invoke golangcilint via the Bazel rule.
 `WORKSPACE` file:
 ```bzl
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # golangci-lint needs Go SDK and hence needs rules_go.
 # See https://github.com/bazelbuild/rules_go for the up to date setup instructions.
@@ -16,10 +17,11 @@ http_archive(
     name = "io_bazel_rules_go",
 )
 
-http_archive(
+git_repository(
     name = "com_github_atlassian_bazel_tools",
-    strip_prefix = "bazel-tools-<commit hash>",
-    urls = ["https://github.com/atlassian/bazel-tools/archive/<commit hash>.zip"],
+    commit = "<commit>",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "<bla>",
 )
 
 load("@com_github_atlassian_bazel_tools//golangcilint:deps.bzl", "golangcilint_dependencies")

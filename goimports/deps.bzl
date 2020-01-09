@@ -6,9 +6,7 @@ def goimports_dependencies():
         go_repository,
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sha256 = "11629171a39a1cb4d426760005be6f7cb9b4182e4cb2756b7f1c5c2b6ae869fe",
-        strip_prefix = "tools-bf090417da8b6150dcfe96795325f5aa78fff718",
-        urls = ["https://github.com/golang/tools/archive/bf090417da8b6150dcfe96795325f5aa78fff718.tar.gz"],
+        commit = "6de373a2766cf6891613ba19eb8bb06227ba7273",  # master, as of 2020-01-02
     )
 
     _maybe(

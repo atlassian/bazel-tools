@@ -1,6 +1,7 @@
 workspace(name = "com_github_atlassian_bazel_tools")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "io_bazel_rules_go",
@@ -20,18 +21,18 @@ http_archive(
     ],
 )
 
-http_archive(
+git_repository(
     name = "com_github_bazelbuild_buildtools",
-    sha256 = "f3ef44916e6be705ae862c0520bac6834dd2ff1d4ac7e5abc61fe9f12ce7a865",
-    strip_prefix = "buildtools-0.29.0",
-    urls = ["https://github.com/bazelbuild/buildtools/archive/0.29.0.tar.gz"],
+    commit = "5bcc31df55ec1de770cb52887f2e989e7068301f",  #v0.29.0
+    remote = "https://github.com/bazelbuild/buildtools.git",
+    shallow_since = "1568030193 +0200",
 )
 
-http_archive(
+git_repository(
     name = "com_google_protobuf",
-    sha256 = "e8c7601439dbd4489fe5069c33d374804990a56c2f710e00227ee5d8fd650e67",
-    strip_prefix = "protobuf-3.11.2",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.2.tar.gz"],
+    commit = "fe1790ca0df67173702f70d5646b82f48f412b99",  #v3.11.2
+    remote = "https://github.com/protocolbuffers/protobuf.git",
+    shallow_since = "1576187991 -0800",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
