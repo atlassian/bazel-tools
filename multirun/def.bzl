@@ -26,7 +26,17 @@ def _multirun_impl(ctx):
     runfiles = runfiles.merge(runnerInfo.default_runfiles)
 
     commands = []
+    tagged_commands = []
     for command in ctx.attr.commands:
+        tagged_commands.append(struct(tag = str(command.label), command = command))
+
+    for command, label in ctx.attr.tagged_commands.items():
+        tagged_commands.append(struct(tag = label, command = command))
+
+    for tag_command in tagged_commands:
+        command = tag_command.command
+        tag = tag_command.tag
+
         defaultInfo = command[DefaultInfo]
         if defaultInfo.files_to_run == None:
             fail("%s is not executable" % command.label, attr = "commands")
@@ -38,7 +48,7 @@ def _multirun_impl(ctx):
         if default_runfiles != None:
             runfiles = runfiles.merge(default_runfiles)
         commands.append(struct(
-            tag = str(command.label),
+            tag = tag,
             path = exe.short_path,
         ))
     instructions = struct(
@@ -68,9 +78,16 @@ _multirun = rule(
     attrs = {
         "commands": attr.label_list(
             allow_empty = True,  # this is explicitly allowed - generated invocations may need to run 0 targets
-            mandatory = True,
+            mandatory = False,
             allow_files = True,
             doc = "Targets to run",
+            cfg = "target",
+        ),
+        "tagged_commands": attr.label_keyed_string_dict(
+            allow_empty = True,  # this is explicitly allowed - generated invocations may need to run 0 targets
+            mandatory = False,
+            allow_files = True,
+            doc = "Labeled targets to run",
             cfg = "target",
         ),
         "parallel": attr.bool(default = False, doc = "If true, targets will be run in parallel, not in the specified order"),

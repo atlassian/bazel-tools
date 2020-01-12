@@ -45,6 +45,22 @@ sh_test(
 )
 
 sh_test(
+    name = "test_multirun_parallel_tagged_success",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        # Sort the output for deterministic comparison; order doesn't matter as long as all the expected lines are
+        # there.
+        "'$(location :multirun_parallel_tagged_success) | sort'",
+        "0",
+        "$(location expected_parallel_tagged_success.txt)",
+    ],
+    data = [
+        "expected_parallel_tagged_success.txt",
+        ":multirun_parallel_tagged_success",
+    ],
+)
+
+sh_test(
     name = "test_multirun_parallel_failure",
     srcs = ["test_compare_content.sh"],
     args = [
@@ -84,6 +100,15 @@ multirun(
         ":command_echo_2",
         ":command_echo_1",
     ],
+    parallel = True,
+)
+
+multirun(
+    name = "multirun_parallel_tagged_success",
+    tagged_commands = {
+        ":command_echo_2": "echo-2",
+        ":command_echo_1": "echo-1"
+    },
     parallel = True,
 )
 
