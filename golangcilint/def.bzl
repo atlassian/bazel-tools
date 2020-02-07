@@ -8,6 +8,7 @@ def _golangcilint_impl(ctx):
         args.append("--config={}".format(ctx.file.config.short_path))
     else:
         args.append("--no-config")
+    args.extend(ctx.attr.extra_args)
     args.extend(ctx.attr.paths)
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     sdk = ctx.attr._go_sdk[GoSDK]
@@ -54,6 +55,10 @@ _golangcilint = rule(
         "paths": attr.string_list(
             doc = "Directories to lint. <path>/... will recurse",
             default = ["./..."],
+        ),
+        "extra_args": attr.string_list(
+            doc = "Extra arguments for the executable",
+            default = [],
         ),
         "prefix": attr.string(
             mandatory = True,
