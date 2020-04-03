@@ -27,6 +27,11 @@ def _multirun_impl(ctx):
     runfiles = runfiles.merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
     runfiles = runfiles.merge(runnerInfo.default_runfiles)
 
+    for data_dep in ctx.attr.data:
+        default_runfiles = data_dep[DefaultInfo].default_runfiles
+        if default_runfiles != None:
+            runfiles = runfiles.merge(default_runfiles)
+
     commands = []
     tagged_commands = []
     runfiles_files = []
@@ -73,7 +78,7 @@ def _multirun_impl(ctx):
     )
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = runfiles.merge(ctx.runfiles(files = runfiles_files)),
+        runfiles = runfiles.merge(ctx.runfiles(files = runfiles_files + ctx.files.data)),
         executable = out_file,
     )]
 
@@ -87,6 +92,10 @@ _multirun = rule(
             doc = "Targets to run",
             cfg = "target",
         ),
+        "data": attr.label_list(
+            doc = "The list of files needed by the commands at runtime. See general comments about `data` at https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes",
+            allow_files = True,
+        ),
         "tagged_commands": attr.label_keyed_string_dict(
             allow_empty = True,  # this is explicitly allowed - generated invocations may need to run 0 targets
             mandatory = False,
@@ -94,7 +103,10 @@ _multirun = rule(
             doc = "Labeled targets to run",
             cfg = "target",
         ),
-        "parallel": attr.bool(default = False, doc = "If true, targets will be run in parallel, not in the specified order"),
+        "parallel": attr.bool(
+            default = False,
+            doc = "If true, targets will be run in parallel, not in the specified order",
+        ),
         "_bash_runfiles": attr.label(
             default = Label("@bazel_tools//tools/bash/runfiles"),
         ),
@@ -118,6 +130,11 @@ def multirun(**kwargs):
 
 def _command_impl(ctx):
     runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
+
+    for data_dep in ctx.attr.data:
+        default_runfiles = data_dep[DefaultInfo].default_runfiles
+        if default_runfiles != None:
+            runfiles = runfiles.merge(default_runfiles)
 
     defaultInfo = ctx.attr.command[DefaultInfo]
     executable = defaultInfo.files_to_run.executable
@@ -148,7 +165,7 @@ def _command_impl(ctx):
     )
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = runfiles.merge(ctx.runfiles(files = [executable])),
+        runfiles = runfiles.merge(ctx.runfiles(files = ctx.files.data + [executable])),
         executable = out_file,
     )]
 
@@ -157,6 +174,10 @@ _command = rule(
     attrs = {
         "arguments": attr.string_list(
             doc = "List of command line arguments",
+        ),
+        "data": attr.label_list(
+            doc = "The list of files needed by this command at runtime. See general comments about `data` at https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes",
+            allow_files = True,
         ),
         "environment": attr.string_dict(
             doc = "Dictionary of environment variables",
