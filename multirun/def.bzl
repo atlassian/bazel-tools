@@ -20,13 +20,16 @@ runfiles_export_envvars
 
 def _multirun_impl(ctx):
     instructions_file = ctx.actions.declare_file(ctx.label.name + ".json")
-    runfiles = ctx.runfiles(files = [instructions_file])
-    runfiles = runfiles.merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
     runnerInfo = ctx.attr._runner[DefaultInfo]
+    runner_exe = runnerInfo.files_to_run.executable
+
+    runfiles = ctx.runfiles(files = [instructions_file, runner_exe])
+    runfiles = runfiles.merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
     runfiles = runfiles.merge(runnerInfo.default_runfiles)
 
     commands = []
     tagged_commands = []
+    runfiles_files = []
     for command in ctx.attr.commands:
         tagged_commands.append(struct(tag = str(command.label), command = command))
 
@@ -43,6 +46,7 @@ def _multirun_impl(ctx):
         exe = defaultInfo.files_to_run.executable
         if exe == None:
             fail("%s does not have an executable file" % command.label, attr = "commands")
+        runfiles_files.append(exe)
 
         default_runfiles = defaultInfo.default_runfiles
         if default_runfiles != None:
@@ -60,7 +64,7 @@ def _multirun_impl(ctx):
         content = instructions.to_json(),
     )
 
-    script = 'exec ./%s -f %s "$@"\n' % (shell.quote(runnerInfo.files_to_run.executable.short_path), shell.quote(instructions_file.short_path))
+    script = 'exec ./%s -f %s "$@"\n' % (shell.quote(runner_exe.short_path), shell.quote(instructions_file.short_path))
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(
         output = out_file,
@@ -69,7 +73,7 @@ def _multirun_impl(ctx):
     )
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = runfiles,
+        runfiles = runfiles.merge(ctx.runfiles(files = runfiles_files)),
         executable = out_file,
     )]
 
@@ -116,6 +120,7 @@ def _command_impl(ctx):
     runfiles = ctx.runfiles().merge(ctx.attr._bash_runfiles[DefaultInfo].default_runfiles)
 
     defaultInfo = ctx.attr.command[DefaultInfo]
+    executable = defaultInfo.files_to_run.executable
 
     default_runfiles = defaultInfo.default_runfiles
     if default_runfiles != None:
@@ -136,7 +141,7 @@ def _command_impl(ctx):
     command_elements = ["exec env"] + \
                        str_env + \
                        str_unqouted_env + \
-                       ["./%s" % shell.quote(defaultInfo.files_to_run.executable.short_path)] + \
+                       ["./%s" % shell.quote(executable.short_path)] + \
                        str_args + \
                        ['"$@"\n']
 
@@ -148,7 +153,7 @@ def _command_impl(ctx):
     )
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = runfiles,
+        runfiles = runfiles.merge(ctx.runfiles(files = [executable])),
         executable = out_file,
     )]
 

@@ -105,11 +105,11 @@ multirun(
 
 multirun(
     name = "multirun_parallel_tagged_success",
+    parallel = True,
     tagged_commands = {
         ":command_echo_2": "echo-2",
-        ":command_echo_1": "echo-1"
+        ":command_echo_1": "echo-1",
     },
-    parallel = True,
 )
 
 command(
@@ -257,4 +257,85 @@ command(
         "4",
     ],
     command = ":sleep_and_exit",
+)
+
+sh_test(
+    name = "test_multirun_generated_executables",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :multirun_generated_executable)",
+        "0",
+        "$(location expected_multirun_generated_executable.txt)",
+    ],
+    data = [
+        "expected_multirun_generated_executable.txt",
+        ":multirun_generated_executable",
+    ],
+)
+
+multirun(
+    name = "multirun_generated_executable",
+    commands = [
+        ":hello",
+        ":command_generated_executable",
+        ":command_static_executable",
+        ":hello2",
+    ],
+)
+
+sh_test(
+    name = "test_command_generated_executable",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :command_generated_executable)",
+        "0",
+        "$(location expected_command_generated_executable.txt)",
+    ],
+    data = [
+        "expected_command_generated_executable.txt",
+        ":command_generated_executable",
+    ],
+)
+
+command(
+    name = "command_generated_executable",
+    command = ":hello1",
+)
+
+sh_test(
+    name = "test_command_static_executable",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :command_static_executable)",
+        "0",
+        "$(location expected_command_static_executable.txt)",
+    ],
+    data = [
+        "expected_command_static_executable.txt",
+        ":command_static_executable",
+    ],
+)
+
+command(
+    name = "command_static_executable",
+    command = ":hello",
+)
+
+sh_binary(
+    name = "hello",
+    srcs = ["hello.sh"],
+)
+
+genrule(
+    name = "hello1",
+    outs = ["hello1.sh"],
+    cmd = """echo '#!/usr/bin/env bash\necho "Generated hello 1!"' > $@""",
+    executable = True,
+)
+
+genrule(
+    name = "hello2",
+    outs = ["hello2.sh"],
+    cmd = """echo '#!/usr/bin/env bash\necho "Generated hello 2"' > $@""",
+    executable = True,
 )

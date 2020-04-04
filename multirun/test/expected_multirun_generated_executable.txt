@@ -1,0 +1,8 @@
+Running //multirun/test:hello
+Hello!
+Running //multirun/test:command_generated_executable
+Generated hello 1!
+Running //multirun/test:command_static_executable
+Hello!
+Running //multirun/test:hello2
+Generated hello 2
