@@ -127,28 +127,23 @@ def _command_impl(ctx):
         runfiles = runfiles.merge(default_runfiles)
 
     str_env = [
-        "%s=%s" % (k, shell.quote(v))
+        "export %s=%s" % (k, shell.quote(v))
         for k, v in ctx.attr.environment.items()
     ]
     str_unqouted_env = [
-        "%s=%s" % (k, v)
+        "export %s=%s" % (k, v)
         for k, v in ctx.attr.raw_environment.items()
     ]
     str_args = [
         "%s" % shell.quote(v)
         for v in ctx.attr.arguments
     ]
-    command_elements = ["exec env"] + \
-                       str_env + \
-                       str_unqouted_env + \
-                       ["./%s" % shell.quote(executable.short_path)] + \
-                       str_args + \
-                       ['"$@"\n']
+    command_exec = " ".join(["exec ./%s" % shell.quote(executable.short_path)] + str_args + ['"$@"\n'])
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(
         output = out_file,
-        content = _CONTENT_PREFIX + " ".join(command_elements),
+        content = "\n".join([_CONTENT_PREFIX] + str_env + str_unqouted_env + [command_exec]),
         is_executable = True,
     )
     return [DefaultInfo(

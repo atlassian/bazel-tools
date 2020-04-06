@@ -1,6 +1,36 @@
 load("@com_github_atlassian_bazel_tools//multirun:def.bzl", "command", "multirun")
 
 sh_test(
+    name = "test_command_env",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :command_env1)",
+        "0",
+        "$(location expected_command_env.txt)",
+    ],
+    data = [
+        "expected_command_env.txt",
+        ":command_env1",
+    ],
+)
+
+command(
+    name = "command_env1",
+    command = ":command_env2",
+    environment = {
+        "A": "a",
+    },
+)
+
+command(
+    name = "command_env2",
+    command = "echo_env.sh",
+    environment = {
+        "B": "b",
+    },
+)
+
+sh_test(
     name = "test_multirun_success",
     srcs = ["test_compare_content.sh"],
     args = [
