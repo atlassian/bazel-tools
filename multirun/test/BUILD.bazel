@@ -369,3 +369,55 @@ genrule(
     cmd = """echo '#!/usr/bin/env bash\necho "Generated hello 2"' > $@""",
     executable = True,
 )
+
+sh_test(
+    name = "test_multirun_data",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :multirun_cat)",
+        "0",
+        "$(location expected_multirun_cat.txt)",
+    ],
+    data = [
+        "expected_multirun_cat.txt",
+        ":multirun_cat",
+    ],
+)
+
+multirun(
+    name = "multirun_cat",
+    commands = [
+        ":command_cat",
+    ],
+)
+
+sh_test(
+    name = "test_command_data",
+    srcs = ["test_compare_content.sh"],
+    args = [
+        "$(location :command_cat)",
+        "0",
+        "$(location expected_command_cat.txt)",
+    ],
+    data = [
+        "expected_command_cat.txt",
+        ":command_cat",
+    ],
+)
+
+command(
+    name = "command_cat",
+    arguments = [
+        "$(location cat1.txt)",
+    ],
+    command = ":cat",
+    data = [
+        "cat1.txt",
+    ],
+)
+
+sh_binary(
+    name = "cat",
+    srcs = ["cat.sh"],
+    data = ["cat2.txt"],
+)

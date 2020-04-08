@@ -143,16 +143,18 @@ def _command_impl(ctx):
     if default_runfiles != None:
         runfiles = runfiles.merge(default_runfiles)
 
+    expansion_targets = ctx.attr.data
+
     str_env = [
-        "export %s=%s" % (k, shell.quote(v))
+        "export %s=%s" % (k, shell.quote(ctx.expand_location(v, targets = expansion_targets)))
         for k, v in ctx.attr.environment.items()
     ]
     str_unqouted_env = [
-        "export %s=%s" % (k, v)
+        "export %s=%s" % (k, ctx.expand_location(v, targets = expansion_targets))
         for k, v in ctx.attr.raw_environment.items()
     ]
     str_args = [
-        "%s" % shell.quote(v)
+        "%s" % shell.quote(ctx.expand_location(v, targets = expansion_targets))
         for v in ctx.attr.arguments
     ]
     command_exec = " ".join(["exec ./%s" % shell.quote(executable.short_path)] + str_args + ['"$@"\n'])
@@ -173,17 +175,17 @@ _command = rule(
     implementation = _command_impl,
     attrs = {
         "arguments": attr.string_list(
-            doc = "List of command line arguments",
+            doc = "List of command line arguments. Subject to $(location) expansion. See https://docs.bazel.build/versions/master/skylark/lib/ctx.html#expand_location",
         ),
         "data": attr.label_list(
             doc = "The list of files needed by this command at runtime. See general comments about `data` at https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes",
             allow_files = True,
         ),
         "environment": attr.string_dict(
-            doc = "Dictionary of environment variables",
+            doc = "Dictionary of environment variables. Subject to $(location) expansion. See https://docs.bazel.build/versions/master/skylark/lib/ctx.html#expand_location",
         ),
         "raw_environment": attr.string_dict(
-            doc = "Dictionary of unqouted environment variables",
+            doc = "Dictionary of unqouted environment variables. Subject to $(location) expansion. See https://docs.bazel.build/versions/master/skylark/lib/ctx.html#expand_location",
         ),
         "command": attr.label(
             mandatory = True,
