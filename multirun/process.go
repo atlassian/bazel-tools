@@ -22,9 +22,12 @@ type process struct {
 }
 
 func (p *process) run(ctx context.Context) error {
-	cmd := exec.Command(p.path, p.args...)
-	// nil means "use environment of the parent process", see the godoc. We do this explicitly to show the intent.
-	cmd.Env = nil
+	cmd := &exec.Cmd{
+		Path: p.path,
+		Args: append([]string{p.path}, p.args...),
+		// nil means "use environment of the parent process", see the godoc. We do this explicitly to show the intent.
+		Env: nil,
+	}
 	var stdout, stderr io.ReadCloser
 	if p.addTag {
 		var err error
