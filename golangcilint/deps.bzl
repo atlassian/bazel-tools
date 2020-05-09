@@ -2,20 +2,21 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 _DOWNLOAD_URI = (
     "https://github.com/golangci/golangci-lint/releases/download/v{version}/" +
-    "golangci-lint-{version}-{arch}.tar.gz"
+    "golangci-lint-{version}-{arch}.{archive}"
 )
 _PREFIX = (
     "golangci-lint-{version}-{arch}"
 )
 
-_VERSION = "1.19.1"
+_ARCHIVE_TYPE = ["zip", "tar.gz"]
+
+_VERSION = "1.26.0"
 _CHECKSUMS = {
-    "windows-386": "5f9269cf8211ee2dc1824a35749662100f2c61548c281dae47ca575e93d2fc76",
-    "windows-amd64": "9adb30ca0d25e0d0816291095c3fa7788bc8a16f343f9ee7a91e5cfc089e4adf",
-    "darwin-386": "f0534be9cde3f7fda16a18d2d77d3b62f58c3eddfebdf9e4159ab6cb96e5ba5d",
-    "linux-amd64": "03ca6a77734720581b11a78e5fd4ce6d6bfd8f36768b214bb9890980b6db261f",
-    "linux-386": "963c6c7f2332234b568fbd2db1acdfae1fa781ff53a11c392141374433e713bd",
-    "darwin-amd64": "b6e0719a6e2d2e8aefe67ab33e67d7be81790fec41da6412e152cd77f37cf955",
+    "windows-386": "9af9783a995a52c7a294b8a2aac34a86af2c42c01546021a0b2baaa99c38fed4",
+    "windows-amd64": "dc9f88a7bcdb5dc4bb6a55000b67efee98545b49dcfed300004d9b411314cc7c",
+    "linux-amd64": "59b0e49a4578fea574648a2fd5174ed61644c667ea1a1b54b8082fde15ef94fd",
+    "linux-386": "b1c7a04dd7dae577af7c005a7ff9a1e6291889bf4fa5e88a9038b99080929460",
+    "darwin-amd64": "c807a26370f53d761bd9d8742358d6276b3608a8286f25c03ecf79fd9eb99cf1",
 }
 
 def _golangcilint_download_impl(ctx):
@@ -29,7 +30,12 @@ def _golangcilint_download_impl(ctx):
     if arch not in _CHECKSUMS:
         fail("Unsupported arch {}".format(arch))
 
-    url = _DOWNLOAD_URI.format(version = _VERSION, arch = arch)
+    if arch.startswith("windows"):
+        archive = _ARCHIVE_TYPE[0]
+    else:
+        archive = _ARCHIVE_TYPE[1]
+
+    url = _DOWNLOAD_URI.format(version = _VERSION, arch = arch, archive = archive)
     prefix = _PREFIX.format(version = _VERSION, arch = arch)
     sha256 = _CHECKSUMS[arch]
 
