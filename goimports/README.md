@@ -1,6 +1,6 @@
 # goimports
 
-Bazel rule for [goimports](https://godoc.org/golang.org/x/tools/cmd/goimports).
+Bazel rule for [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports?tab=doc).
 
 ## Limitations
 
