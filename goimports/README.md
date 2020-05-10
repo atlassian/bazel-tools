@@ -2,6 +2,13 @@
 
 Bazel rule for [goimports](https://godoc.org/golang.org/x/tools/cmd/goimports).
 
+## Limitations
+
+This rule does not work with:
+- generated Go code
+- with Bazel-managed Go dependencies
+- with Go modules, unless `go mod vendor` is used
+
 ## Setup and usage via Bazel
 
 You can invoke goimports via the Bazel rule.

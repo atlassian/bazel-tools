@@ -10,6 +10,15 @@ regular linting tool).
 Since it is just a Bazel test rule it does not modify your working
 directory files and can be used in a CI tool to check the code style.
 
+## Limitations
+
+This rule does not work with:
+- generated Go code
+- with Bazel-managed Go dependencies
+- with Go modules, unless `go mod vendor` is used
+
+Consider using [`nogo`](https://github.com/bazelbuild/rules_go/blob/master/go/nogo.rst) from rules_go.
+
 ## Setup and usage via Bazel
 
 You can invoke revive via the Bazel rule.

@@ -2,6 +2,15 @@
 
 Bazel rule for [golangci-lint](https://github.com/golangci/golangci-lint).
 
+## Limitations
+
+This rule does not work with:
+- generated Go code
+- with Bazel-managed Go dependencies
+- with Go modules, unless `go mod vendor` is used
+
+Consider using [`nogo`](https://github.com/bazelbuild/rules_go/blob/master/go/nogo.rst) from rules_go.
+
 ## Usage
 
 You can invoke golangcilint via the Bazel rule.

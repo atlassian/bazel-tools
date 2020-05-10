@@ -2,6 +2,15 @@
 
 Bazel rule for [gometalinter](https://github.com/alecthomas/gometalinter).
 
+## Limitations
+
+This rule does not work with:
+- generated Go code
+- with Bazel-managed Go dependencies
+- with Go modules, unless `go mod vendor` is used
+
+Consider using [`nogo`](https://github.com/bazelbuild/rules_go/blob/master/go/nogo.rst) from rules_go.
+
 ## Setup and usage via Bazel
 
 You can invoke gometalinter via the Bazel rule.
