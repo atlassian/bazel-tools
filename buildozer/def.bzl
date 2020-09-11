@@ -21,8 +21,10 @@ def _buildozer_impl(ctx):
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
     substitutions = {
         "@@ARGS@@": shell.array_literal(args),
+        "@@BUILDIFIER_SHORT_PATH": shell.quote(ctx.executable.buildifier.short_path),
         "@@BUILDOZER_SHORT_PATH@@": shell.quote(ctx.executable._buildozer.short_path),
         "@@ERROR_ON_NO_CHANGES@@": shell.quote(str(ctx.attr.error_on_no_changes).lower()),
+        "@@FORMAT_ON_WRITE@@": shell.quote(str(ctx.attr.format_on_write).lower()),
     }
     ctx.actions.expand_template(
         template = ctx.file._runner,
@@ -79,6 +81,14 @@ _buildozer = rule(
         ),
         "error_on_no_changes": attr.bool(
             doc = "Exit with 3 on success, when no changes were made",
+        ),
+        "format_on_write": attr.bool(
+            default = False,
+            doc = "Set to True for format on write using the -buildifier flag. If the `buildifier` attribute is empty, use the built-in formatter",
+        ),
+        "buildifier": attr.label(
+            executable = True,
+            doc = "A label pointing to an executable buildifier output. Has no meaning unless `format_on_write` is True"
         ),
         "_buildozer": attr.label(
             default = "@com_github_bazelbuild_buildtools//buildozer",
