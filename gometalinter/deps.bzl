@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 _GOMETALINTER_TARBALLS = {
     "darwin_amd64": (
@@ -42,7 +43,7 @@ _gometalinter_download = repository_rule(
 )
 
 def gometalinter_dependencies():
-    _maybe(
+    maybe(
         http_archive,
         name = "bazel_skylib",
         urls = [
@@ -54,7 +55,3 @@ def gometalinter_dependencies():
     _gometalinter_download(
         name = "com_github_atlassian_bazel_tools_gometalinter",
     )
-
-def _maybe(repo_rule, name, **kwargs):
-    if name not in native.existing_rules():
-        repo_rule(name = name, **kwargs)
