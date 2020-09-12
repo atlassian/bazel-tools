@@ -4,7 +4,6 @@ def _buildozer_impl(ctx):
     # That way we don't depend on defaults encoded in the binary but always
     # use defaults set on attributes of the rule
     args = [
-        "-f=%s" % ctx.file.commands.short_path,
         "-k=%s" % str(ctx.attr.keep_going).lower(),
         "-types=%s" % ",".join(ctx.attr.types),
         "-eol-comments=%s" % str(ctx.attr.prefer_eol_comments).lower(),
@@ -13,6 +12,9 @@ def _buildozer_impl(ctx):
         "-shorten_labels=%s" % str(ctx.attr.shorten_labels).lower(),
         "-delete_with_comments=%s" % str(ctx.attr.delete_with_comments).lower(),
     ]
+
+    if ctx.file.commands:
+        args.append("-f=%s" % ctx.file.commands.short_path)
     if ctx.file.tables:
         args.append("-tables=%s" % ctx.file.tables.short_path)
     if ctx.file.add_tables:
@@ -44,7 +46,6 @@ _buildozer = rule(
     attrs = {
         "commands": attr.label(
             allow_single_file = True,
-            mandatory = True,
             doc = "File to read commands from",
         ),
         "keep_going": attr.bool(
