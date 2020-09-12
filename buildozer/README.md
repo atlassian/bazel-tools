@@ -52,3 +52,12 @@ Invoke with
 ```bash
 bazel run //:buildozer
 ```
+
+## Documentation
+
+- Buildozer [rule reference](docs/buildozer_rule.md)
+
+## Contributor notes
+
+* After updating the `_buildozer` rule's inline documentation, you should run
+  `make buildzer/docs` from the repository root.
