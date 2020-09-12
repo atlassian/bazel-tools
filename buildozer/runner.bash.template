@@ -8,15 +8,13 @@ BUILDOZER_SHORT_PATH=@@BUILDOZER_SHORT_PATH@@
 ERROR_ON_NO_CHANGES=@@ERROR_ON_NO_CHANGES@@
 FORMAT_ON_WRITE=@@FORMAT_ON_WRITE@@
 
+buildifier_short_path="$BUILDIFIER_SHORT_PATH"
 buildozer_short_path=$(readlink "$BUILDOZER_SHORT_PATH")
 
 if [[ "$FORMAT_ON_WRITE" == "true" ]]; then
-    # Default to buildozer's internal formatter
-    buildifier_short_path=''
-
     # If the `buildifier` attribute has a value, use it instead
-    if [ ! -z "${BUILDIFIER_SHORT_PATH+x}" ]; then
-        buildifier_short_path=$(readlink "$BUILDIFIER_SHORT_PATH")
+    if [ -n "$buildifier_short_path" ]; then
+        buildifier_short_path=$(readlink "$buildifier_short_path")
     fi
 
     ARGS+=("-buildifier=${buildifier_short_path}")
