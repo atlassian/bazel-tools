@@ -1,0 +1,32 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
+
+bzl_library(
+    name = "buildozer_docs_library",
+    srcs = [
+        "@bazel_skylib//lib:shell.bzl",
+    ],
+)
+
+stardoc(
+    name = "buildozer_rule_docs",
+    input = "//buildozer:def.bzl",
+    out = "buildozer_rule.in.md",
+    deps = [
+        ":buildozer_docs_library",
+    ],
+    symbol_names = [
+        "_buildozer",
+    ],
+)
+
+genrule(
+    name = "docs",
+    srcs = [
+        ":buildozer_rule_docs",
+    ],
+    outs = [
+        "buildozer_rule.md",
+    ],
+    cmd = "sed -e 's/_buildozer/buildozer/g' $(location :buildozer_rule_docs) > $@",
+)

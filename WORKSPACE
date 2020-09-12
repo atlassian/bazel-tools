@@ -35,6 +35,16 @@ git_repository(
     shallow_since = "1581711200 -0800",
 )
 
+# Stardoc is a documentation generator for Bazel
+http_archive(
+    name = "io_bazel_stardoc",
+    sha256 = "74f4b76a6307f1543c2f974236db2aee86bdcf55dbc41a16bb518e1ffa939644",
+    strip_prefix = "stardoc-a8c608986b4f27416ce085495617a6c9b3b40195",
+    urls = [
+        "https://github.com/bazelbuild/stardoc/archive/a8c608986b4f27416ce085495617a6c9b3b40195.tar.gz",
+    ],
+)
+
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")

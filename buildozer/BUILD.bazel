@@ -1,1 +1,9 @@
 exports_files(["runner.bash.template"])
+exports_files(
+    [
+        "def.bzl",
+    ],
+    visibility = [
+        "//buildozer/docs:__pkg__",
+    ],
+)
