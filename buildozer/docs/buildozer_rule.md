@@ -20,7 +20,7 @@ buildozer(<a href="#buildozer-name">name</a>, <a href="#buildozer-add_tables">ad
 | <a id="buildozer-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 | <a id="buildozer-add_tables"></a>add_tables |  JSON file with custom table definitions which will be merged with the built-in tables   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
 | <a id="buildozer-buildifier"></a>buildifier |  A label pointing to an executable buildifier output. Has no meaning unless <code>format_on_write</code> is True   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
-| <a id="buildozer-commands"></a>commands |  File to read commands from   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
+| <a id="buildozer-commands"></a>commands |  File to read commands from   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
 | <a id="buildozer-delete_with_comments"></a>delete_with_comments |  If a list attribute should be deleted even if there is a comment attached to it   | Boolean | optional | True |
 | <a id="buildozer-edit_variables"></a>edit_variables |  For attributes that simply assign a variable (e.g. hdrs = LIB_HDRS), edit the build variable instead of appending to the attribute   | Boolean | optional | False |
 | <a id="buildozer-error_on_no_changes"></a>error_on_no_changes |  Exit with 3 on success, when no changes were made   | Boolean | optional | False |
