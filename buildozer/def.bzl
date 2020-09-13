@@ -13,6 +13,8 @@ def _buildozer_impl(ctx):
         "-delete_with_comments=%s" % str(ctx.attr.delete_with_comments).lower(),
     ]
 
+    runfiles = [ctx.executable._buildozer]
+
     if ctx.file.commands:
         args.append("-f=%s" % ctx.file.commands.short_path)
     if ctx.file.tables:
@@ -22,6 +24,7 @@ def _buildozer_impl(ctx):
 
     if ctx.executable.buildifier:
         buildifier_short_path = ctx.executable.buildifier.short_path
+        runfiles.append(ctx.executable.buildifier)
     else:
         buildifier_short_path = ""
 
@@ -39,10 +42,10 @@ def _buildozer_impl(ctx):
         substitutions = substitutions,
         is_executable = True,
     )
-    runfiles = ctx.runfiles(files = [ctx.executable._buildozer])
+
     return [DefaultInfo(
         files = depset([out_file]),
-        runfiles = runfiles,
+        runfiles = ctx.runfiles(files = runfiles),
         executable = out_file,
     )]
 
