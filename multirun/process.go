@@ -58,9 +58,13 @@ func (p *process) run(ctx context.Context) error {
 			p.readLinesAndAddPrefix(stderr, p.stderrSink)
 		}()
 	}
+	var wg2 sync.WaitGroup
+	defer wg2.Wait() // waiting for terminating go-routine to finish
 	done := make(chan struct{})
-	defer close(done) // unblocks the goroutine below when cmd.Wait() returns
+	defer close(done)
+	wg2.Add(1)
 	go func() {
+		defer wg2.Done()
 		select {
 		case <-ctx.Done(): // process should be terminated earlier
 			if err := cmd.Process.Signal(syscall.SIGTERM); err != nil {
@@ -74,11 +78,7 @@ func (p *process) run(ctx context.Context) error {
 		}
 	}()
 	wg.Wait() // waiting for stderr/stdout to be fully consumed before calling cmd.Wait() as per os/exec.Cmd documentation
-	err := cmd.Wait()
-	if err != nil {
-		return err
-	}
-	return nil
+	return cmd.Wait()
 }
 
 func (p *process) readLinesAndAddPrefix(in io.Reader, out io.Writer) {
