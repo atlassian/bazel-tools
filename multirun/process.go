@@ -63,9 +63,9 @@ func (p *process) run(ctx context.Context) error {
 	go func() {
 		select {
 		case <-ctx.Done(): // process should be terminated earlier
-			if err := cmd.Process.Signal(syscall.SIGTERM); err != nil {
+			if err := cmd.Process.Signal(syscall.SIGTERM); err != nil && !isFinished(err) {
 				_, _ = fmt.Fprintf(p.stderrSink, "[multirun:%s] Failed to send SIGTERM, sending SIGKILL\n", p.tag)
-				if err = cmd.Process.Kill(); err != nil {
+				if err = cmd.Process.Kill(); err != nil && !isFinished(err) {
 					_, _ = fmt.Fprintf(p.stderrSink, "[multirun:%s] Failed to send SIGKILL\n", p.tag)
 				}
 			}
@@ -79,6 +79,10 @@ func (p *process) run(ctx context.Context) error {
 		return err
 	}
 	return nil
+}
+
+func isFinished(err error) bool {
+	return err.Error() == "os: process already finished"
 }
 
 func (p *process) readLinesAndAddPrefix(in io.Reader, out io.Writer) {
