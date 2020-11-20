@@ -11,8 +11,10 @@ mkdir -p "src/$PREFIX_DIR_PATH"
 ln -snf "$BUILD_WORKSPACE_DIRECTORY" "src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
 
 GOPATH=$(pwd -P)
+GOCACHE="$(mktemp -d)"
+trap "rm -rf '${GOCACHE}'" EXIT
 
 goimports_short_path=$(readlink "$GOIMPORTS_SHORT_PATH")
 CURDIR="$GOPATH/src/$PREFIX_DIR_PATH/$PREFIX_BASE_NAME"
 cd "$CURDIR"
-/usr/bin/env -i GOPATH="$GOPATH" PATH="$PATH" PWD="$CURDIR" "$goimports_short_path" "${ARGS[@]}" $(find . -type f -name  '*.go' -not -path './bazel-*' @@EXCLUDE_PATHS@@ @@EXCLUDE_FILES@@) "$@"
+/usr/bin/env -i GOPATH="$GOPATH" GOCACHE="${GOCACHE}" PATH="$PATH" PWD="$CURDIR" "$goimports_short_path" "${ARGS[@]}" $(find . -type f -name  '*.go' -not -path './bazel-*' @@EXCLUDE_PATHS@@ @@EXCLUDE_FILES@@) "$@"
