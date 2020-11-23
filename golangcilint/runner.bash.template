@@ -17,6 +17,8 @@ DIRECTORY="$(pwd -P)"
 NEW_GOPATH="${DIRECTORY}"
 NEW_GOROOT="${DIRECTORY}/${NEW_GOROOT}"
 NEW_PATH="${NEW_GOPATH}/external/com_github_atlassian_bazel_tools_golangcilint:${NEW_GOROOT}/bin:${PATH}"
+GOCACHE="$(mktemp -d)"
+trap "rm -rf '${GOCACHE}'" EXIT
 
 golangcilint_short_path=$(readlink "${GOLANGCILINT_SHORT_PATH}")
 CURDIR="${NEW_GOPATH}/src/${PREFIX_DIR_PATH}/${PREFIX_BASE_NAME}"
@@ -26,7 +28,7 @@ cd "${CURDIR}"
     -i \
     GOPATH="${NEW_GOPATH}"\
     GOROOT="${NEW_GOROOT}"\
-    GOCACHE="$(mktemp -d)"\
+    GOCACHE="${GOCACHE}"\
     GOLANGCI_LINT_CACHE="$(mktemp -d)"\
     PATH="${NEW_PATH}"\
     PWD="${CURDIR}"\
