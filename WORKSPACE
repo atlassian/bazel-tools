@@ -38,10 +38,10 @@ git_repository(
 # Stardoc is a documentation generator for Bazel
 http_archive(
     name = "io_bazel_stardoc",
-    sha256 = "a2030d5636ef5420e1c0d370e712fe7e76b6848843a3715e3ab34c73ef5d19a3",
-    strip_prefix = "stardoc-b0fb1463b546557c11b2e01cc20d14e551cc718c",
+    sha256 = "9aec63241d323a28663ba99c1ce57bab6f28f1646390511ee48d4b42082f10f4",
+    strip_prefix = "stardoc-8275ced1b6952f5ad17ec579a5dd16e102479b72",
     urls = [
-        "https://github.com/bazelbuild/stardoc/archive/b0fb1463b546557c11b2e01cc20d14e551cc718c.tar.gz",
+        "https://github.com/bazelbuild/stardoc/archive/8275ced1b6952f5ad17ec579a5dd16e102479b72.tar.gz",
     ],
 )
 
