@@ -11,13 +11,13 @@ _PREFIX = (
 
 _ARCHIVE_TYPE = ["zip", "tar.gz"]
 
-_VERSION = "1.26.0"
+_VERSION = "1.36.0"
 _CHECKSUMS = {
-    "windows-386": "9af9783a995a52c7a294b8a2aac34a86af2c42c01546021a0b2baaa99c38fed4",
-    "windows-amd64": "dc9f88a7bcdb5dc4bb6a55000b67efee98545b49dcfed300004d9b411314cc7c",
-    "linux-amd64": "59b0e49a4578fea574648a2fd5174ed61644c667ea1a1b54b8082fde15ef94fd",
-    "linux-386": "b1c7a04dd7dae577af7c005a7ff9a1e6291889bf4fa5e88a9038b99080929460",
-    "darwin-amd64": "c807a26370f53d761bd9d8742358d6276b3608a8286f25c03ecf79fd9eb99cf1",
+    "windows-386": "75dd554265562b5947ad2939fb3fd3c60756356ac2dd02567cc80c82d86def54",
+    "windows-amd64": "de40246f14027edea21678a76c61b32b13d2a3881088fc1b5b25c5dff83d122c",
+    "linux-amd64": "9b8856b3a1c9bfbcf3a06b78e94611763b79abd9751c245246787cd3bf0e78a5",
+    "linux-386": "09d54b2cb938465b4fb2b57970c55d51b4b01b1e2f08e6ae70d424738ed9031f",
+    "darwin-amd64": "921e22e9e04a9acb22203bce37cff94357b4ea137c8fd5b7a1759529edbc8582",
 }
 
 def _golangcilint_download_impl(ctx):
