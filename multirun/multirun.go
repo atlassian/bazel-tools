@@ -11,6 +11,7 @@ type multirun struct {
 	stdoutSink, stderrSink io.Writer
 	args                   []string
 	parallel               bool
+	quiet                  bool
 }
 
 func (m multirun) run(ctx context.Context) error {
@@ -45,7 +46,9 @@ func (m multirun) run(ctx context.Context) error {
 				stderrSink: m.stderrSink,
 				args:       m.args,
 			}
-			fmt.Fprintf(m.stderrSink, "Running %s\n", cmd.Tag)
+			if !m.quiet {
+				fmt.Fprintf(m.stderrSink, "Running %s\n", cmd.Tag)
+			}
 			if err := p.run(ctx); err != nil {
 				return err
 			}
