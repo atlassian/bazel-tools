@@ -63,6 +63,7 @@ def _multirun_impl(ctx):
     instructions = struct(
         commands = commands,
         parallel = ctx.attr.parallel,
+        quiet = ctx.attr.quiet,
     )
     ctx.actions.write(
         output = instructions_file,
@@ -106,6 +107,10 @@ _multirun = rule(
         "parallel": attr.bool(
             default = False,
             doc = "If true, targets will be run in parallel, not in the specified order",
+        ),
+        "quiet": attr.bool(
+            default = False,
+            doc = "Limit output where possible",
         ),
         "_bash_runfiles": attr.label(
             default = Label("@bazel_tools//tools/bash/runfiles"),
