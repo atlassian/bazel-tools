@@ -4,6 +4,10 @@ Various reusable bits for the [Bazel build system](https://bazel.build/).
 
 See subdirectories for documentation.
 
+## Deprecation notice
+
+This repository is deprecated. The maintainer no longer works at Atlassian, please use https://github.com/ash2k/bazel-tools instead.
+
 ## CI
 
 Our builds are part of the [Bazel ecosystem builds on Buildkite](https://buildkite.com/bazel/atlassian-bazel-tools).
