@@ -6,7 +6,7 @@ See subdirectories for documentation.
 
 ## Deprecation notice
 
-This repository is deprecated. The maintainer no longer works at Atlassian, please use https://github.com/ash2k/bazel-tools instead.
+This repository is deprecated. Please use https://github.com/ash2k/bazel-tools instead.
 
 ## CI
 
